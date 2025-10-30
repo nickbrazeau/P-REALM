@@ -56,9 +56,9 @@ mkdir -p fastq
 len=`wc -l $INPUT |awk '{print $1}'`
 for i in `seq 1 ${len}`;
   do
-    smpl=`cat $INPUT | cut -f1 -d " " | sed -n ${i}p`
-    path=`cat $INPUT | cut -f2 -d " " | sed -n ${i}p`
-    link=`cat $INPUT | cut -f3 -d " " | sed -n ${i}p`
+    smpl=`cat $INPUT | cut -f1 -d "," | sed -n ${i}p`
+    path=`cat $INPUT | cut -f2 -d "," | sed -n ${i}p`
+    link=`cat $INPUT | cut -f3 -d "," | sed -n ${i}p`
     echo "make sampledir=${smpl} from=${path} to=${link}"
     ln -s ${path} ${link}
 

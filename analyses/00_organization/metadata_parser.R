@@ -44,7 +44,7 @@ readr::write_csv(combined, file = "data/meta/combined_mtdt.csv")
 #............................................................
 # Make Symlink
 #...........................................................
-combined %>%
+arch <- combined %>%
   dplyr::select(c("S_No", "R1", "R2")) %>%
   tidyr::pivot_longer(., cols = c("R1", "R2"),
                       names_to = "drop",
@@ -55,7 +55,9 @@ combined %>%
                 out = paste0("/hpc/group/taylorlab/users/nfb/projects/P-REALM/fastq/",
                              S_No, ifelse(stringr::str_detect(reads, "R1"),
                                           "_R1.fastq.gz", "_R2.fastq.gz"))
-  ) %>%
-  readr::write_tsv(., file = "analyses/00_organization/symlink_architecture.tab.txt")
+  )
+
+# out
+readr::write_csv(arch, file = "analyses/00_organization/symlink_architecture.csv")
 
 
