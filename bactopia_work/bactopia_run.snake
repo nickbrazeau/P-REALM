@@ -4,125 +4,212 @@ Snakefile — Bactopia wrapper for pangenome analysis (standard, snippy
 """
 
 from __future__ import print_function
-
 import os
 import sys
-import yaml
-import re
-from collections import defaultdict
 
-def load_run_metadata(f):
-	""" Get run metadata from tab-separated file."""
-	libs = defaultdict(dict)
-	samples = set()
-	with open(f) as rfile:
-		for line in rfile:
-			if line.startswith("#"):
-				continue
-			pieces = line.strip().split()
-			sample, run = pieces[:2]
-			library = str(sample)
-			#if len(pieces) > 2:
-			#	run = pieces[3]
-			samples.add(sample)
-			libs[run] = ( re.sub(r"[^A-Za-z0-9]", ".", library), sample)
-
-	return libs, list(samples)
-
-def make_rg_tag(iid, sm, lib, pl = "illumina"):
-	tag = r"@RG\tLB:{}\tID:{}\tSM:{}\tPL:{}".format(lib,iid,sm,pl)
-	return tag
 
 ## read project-specific configuration options
-#config = yaml.load(open("config.yaml"))
-REF = os.path.expandvars(config["reference"])
-ADAPTERS = os.path.expandvars(config["adapters"])
-SEQROOT = config["fastq"]
-ALNROOT = config["aligned"]
-TMP_DIR = config["tmpdir"]
-MAX_RECORDS_IN_RAM = config["readbuffer"]
-LOGROOT = config["logs"]
+REF = "/hpc/group/taylorlab/users/nfb/projects/P-REALM/ref/CF_000013465.1_ASM1346v1_genomic.gbff"
+DB = "/hpc/group/taylorlab/users/nfb/projects/P-REALM/baktadb/db.tar.xz"
+OUTDIR = "/hpc/group/taylorlab/users/nfb/projects/P-REALM/bactopia_work"
 
-## global software configuration; probably won't change much
-PICARD = "/nas02/apps/picard-2.10.3/picard-2.10.3/picard.jar"
-
-## read run manifest, assigning runs to samples
-runs, samples = load_run_metadata(config["runs"])
-
-## make targets
-lane_bams = defaultdict(list)
-for rg,(lib, sample) in runs.items():
-	lane_bams[sample].append( os.path.join(ALNROOT, "lanes_raw", "{}/{}.aligned.bam".format(sample, rg)) )
-final_target = [ os.path.join(ALNROOT, "merged", "{}.bam.bai".format(s)) for s in samples ]
-
+## targets
 rule all:
-	input: final_target
+    input:
+        [
+            "bashreport.txt",
+            "ismapper.2out.txt",
+            "mobsuite.2out.txt",
+            "rgi.2out.txt",
+            "plasmidfinder.2out.txt",
+            "staphtyper.2out.txt",
+            "staphopiasccmec.2out.txt",
+            "snippy.2out.txt",
+            "mashtree.2out.txt",
+            "pangenome_panaroo.2out.txt",
+            "pangenome_pirate.2out.txt"
+        ]
 
-rule index_merged:
-	input:
-		"{alnroot}/merged/{sample}.bam"
-	output:
-		"{alnroot}/merged/{sample}.bam.bai"
-	params:
-		memory = str(6),
-		threads =  str( int(config["threads"]) - 1 )
+## rules
+rule summarize_ret:
+	input: OUTDIR + "prealm_ret"
+	output: "bashreport.txt"
 	shell:
 		r"""
-		java -jar -Xmx4g -XX:ParallelGCThreads={params.threads} {PICARD} BuildBamIndex \
-			INPUT={input} \
-			OUTPUT={output} \
-			TMP_DIR={TMP_DIR} \
-			VALIDATION_STRINGENCY=LENIENT
+		bactopia summary \
+    	--bactopia-path {input} \
+		2> {output}
+		"""
+##########################################
+#######    Genome Tools          #########
+##########################################
+rule run_ISmapper_module:
+	input: dir = OUTDIR + "prealm_ret", ref = REF
+	output: "ismapper.2out.txt"
+	shell:
+		r"""
+		bactopia \
+		--wf ismapper \
+    	--bactopia {input.dir} \
+    	--exclude exclude.txt \
+		--reference {input.ref} \
+		2> {output}
 		"""
 
-rule merge_lanes:
-	input:
-		lambda wildcards: lane_bams[wildcards.sample]
-	output:
-		"{alnroot}/merged/{sample}.bam"
-	params:
-		memory = str(8),
-		threads = str( int(config["threads"]) - 1 )
-	run:
-		inbams = " ".join([ "INPUT="+x for x in lane_bams[wildcards.sample] ])
-		cmd = "java -jar -Xmx8g -XX:-UseGCOverheadLimit -XX:ParallelGCThreads={params.threads} {PICARD} MergeSamFiles " + \
-			"SORT_ORDER=coordinate {inbams} OUTPUT={output} " + \
-			"TMP_DIR={TMP_DIR} MAX_RECORDS_IN_RAM={MAX_RECORDS_IN_RAM}"
-		shell(cmd)
-
-# Stream reads through cutadapt and straight to aligner
-# see:
-#	http://cutadapt.readthedocs.io/en/stable/guide.html#removing-adapters
-#	https://support.illumina.com/bulletins/2016/12/what-sequences-do-i-use-for-adapter-trimming.html
-rule trim_and_align:
-	input:
-		ref = REF,
-		adapters = ADAPTERS,
-		read1 = os.path.join(SEQROOT, "{sample}/{rg}_1.fastq.gz"),
-		read2 = os.path.join(SEQROOT, "{sample}/{rg}_2.fastq.gz")
-	output:
-		aligned = temp( os.path.join(ALNROOT, "lanes_raw/{sample}/{rg}.aligned.bam") ),
-		trimlog = os.path.join(SEQROOT, "{sample}/{rg}_trimming.log")
-		# split = "{alnroot}/lanes_raw/{sample}_{barcode}_{lane}.split.bam",
-		# discordant = "{alnroot}/lanes_raw/{sample}_{barcode}_{lane}.discordant.bam",
-		# unmapped = "{alnroot}/lanes_raw/{sample}_{barcode}_{lane}.unmapped.fastq"
-	params:
-		rg = lambda wildcards: make_rg_tag(wildcards.rg, wildcards.sample, runs[ wildcards.rg ][0]),
-		minlength = config["min_trimmed_length"],
-		threads = config["threads"],
-		memory = config["memory"]
+rule run_mobsuite_tool:
+	input: OUTDIR + "prealm_ret"
+	output: "mobsuite.2out.txt"
 	shell:
 		r"""
-		cutadapt --interleaved \
-			-a file:{input.adapters} \
-			-A file:{input.adapters} \
-			-m {params.minlength} \
-			{input.read1} {input.read2} \
-			2>{output.trimlog} | \
-		bwa mem -t {params.threads} -YK100000000 \
-			-H '@PG\tID:cutadapt\tCL:cutadapt -a file:{input.adapters} -A file:{input.adapters} -m {params.minlength} --interleaved {input.read1} {input.read2} 2>{output.trimlog}' \
-			-R '{params.rg}' -p \
-			{input.ref} - | \
-		samblaster --addMateTags | \
-		samtools view -bhS - >{output.aligned}
+		bactopia \
+		--wf mobsuite \
+    	--bactopia {input} \
+    	--exclude exclude.txt \
+		2> {output}
+		"""
+
+rule run_rgi_tool:
+	input: OUTDIR + "prealm_ret"
+	output: "rgi.2out.txt"
+	shell:
+		r"""
+		bactopia \
+		--wf rgi \
+    	--bactopia {input} \
+    	--exclude exclude.txt \
+		2> {output}
+		"""
+rule run_plasmidfinder_tool:
+	input: OUTDIR + "prealm_ret"
+	output: "plasmidfinder.2out.txt"
+	shell:
+		r"""
+		bactopia \
+		--wf plasmidfinder \
+    	--bactopia {input} \
+    	--exclude exclude.txt \
+		2> {output}
+		"""
+
+##########################################
+#######    Staph Tools           #########
+##########################################
+
+rule run_staphtyper_tool:
+	input: OUTDIR + "prealm_ret"
+	output: "staphtyper.2out.txt"
+	shell:
+		r"""
+		bactopia \
+		--wf staphtyper \
+    	--bactopia {input} \
+    	--exclude exclude.txt \
+		2> {output}
+		"""
+rule run_sstaphopiasccmec_tool:
+	input: OUTDIR + "prealm_ret"
+	output: "staphopiasccmec.2out.txt"
+	shell:
+		r"""
+		bactopia \
+		--wf staphopiasccmec \
+    	--bactopia {input} \
+    	--exclude exclude.txt \
+		2> {output}
+		"""
+
+##########################################
+#######          Modules         #########
+##########################################
+rule run_snippy_module:
+	input: dir = OUTDIR + "prealm_ret", ref = REF
+	output: "snippy.2out.txt"
+	shell:
+		r"""
+		bactopia \
+		--wf snippy \
+    	--bactopia {input.dir} \
+    	--exclude exclude.txt \
+		--reference {input.ref} \
+		2> {output}
+		"""
+
+
+rule run_mashtree:
+	input: OUTDIR + "prealm_ret"
+	output: "mashtree.2out.txt"
+	shell:
+		r"""
+		bactopia \
+		--wf mashtree \
+    	--bactopia {input} \
+    	--exclude exclude.txt \
+		--use_panaroo \
+		2> {output}
+		"""
+
+
+rule run_pangenome_panaroo_module:
+	input: OUTDIR + "prealm_ret"
+	output: "pangenome_panaroo.2out.txt"
+	shell:
+		r"""
+		bactopia \
+		--wf pangenome \
+    	--bactopia {input} \
+    	--exclude exclude.txt \
+		--use_pirate \
+		2> {output}
+		"""
+rule run_pangenome_pirate_module:
+	input: OUTDIR + "prealm_ret"
+	output: "pangenome_pirate.2out.txt"
+	shell:
+		r"""
+		bactopia \
+		--wf pangenome \
+    	--bactopia {input} \
+    	--exclude exclude.txt \
+		--use_pirate \
+		2> {output}
+		"""
+
+##########################################
+#######          Main            #########
+##########################################
+# bactopia runs tools sequentially within its own run_pipeline, details below for flags I have incorporated:
+# gather: increased coverage from default 100 to 300
+# QC: adding fastqc and fastp (this is default)
+#    adding scrubbr to remove human genome data
+# Assembler: using Shovill-PE with default SKESA. Enable adapter trimming
+# Annotator: using Bakta intead of Prokka default
+# Sketcher: using default (really a sanity check)
+# Sequence Typing: MSLT module, default
+# Antimicrobial Resistance: AMR module, default
+# Merlin: uses sketches to run species-specific tools; letting it detect SA
+rule run_bactopia_main:
+	input: smpl = OUTDIR + "samples.fofn.txt", db = DB
+	output: OUTDIR + "prealm_ret"
+	shell:
+		r"""
+		bactopia \
+    	--samples {input.smpl} \
+    	--coverage 300 \
+		--shovill_assembler skesa \
+		--trim \
+		--use_bakta \
+		--bakta_db {input.db} \
+    	--outdir {output}
+		"""
+
+rule prepare_samples:
+	input: FASTQ
+	output: OUTDIR + "samples.fofn.txt"
+	shell:
+		r"""
+		bactopia prepare \
+	    --path {input} \
+	    --species "Staphylococcus aureus" \
+	    --genome-size 2800000 \
+	    > {output}
 		"""

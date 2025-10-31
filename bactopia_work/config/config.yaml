@@ -1,0 +1,5 @@
+# configuration for bactopia pipeline
+logs: jobs
+tmpdir: .tmp 
+threads: 6
+memory: 12
