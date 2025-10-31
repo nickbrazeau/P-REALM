@@ -11,35 +11,27 @@ import sys
 ## read project-specific configuration options
 REF = "/hpc/group/taylorlab/users/nfb/projects/P-REALM/ref/CF_000013465.1_ASM1346v1_genomic.gbff"
 DB = "/hpc/group/taylorlab/users/nfb/projects/P-REALM/baktadb/db.tar.xz"
+QCDIR = "/hpc/group/taylorlab/users/nfb/projects/P-REALM/prealm_ret/summary/"
 OUTDIR = "/hpc/group/taylorlab/users/nfb/projects/P-REALM/bactopia_work"
 
 ## targets
 rule all:
-    input:
-        [
-            "bashreport.txt",
-            "ismapper.2out.txt",
-            "mobsuite.2out.txt",
-            "rgi.2out.txt",
-            "plasmidfinder.2out.txt",
-            "staphtyper.2out.txt",
-            "staphopiasccmec.2out.txt",
-            "snippy.2out.txt",
-            "mashtree.2out.txt",
-            "pangenome_panaroo.2out.txt",
-            "pangenome_pirate.2out.txt"
-        ]
+	input: "bashreport.txt"
+    # input:
+    #     [
+    #         "ismapper.2out.txt",
+    #         "mobsuite.2out.txt",
+    #         "rgi.2out.txt",
+    #         "plasmidfinder.2out.txt",
+    #         "staphtyper.2out.txt",
+    #         "staphopiasccmec.2out.txt",
+    #         "snippy.2out.txt",
+    #         "mashtree.2out.txt",
+    #         "pangenome_panaroo.2out.txt",
+    #         "pangenome_pirate.2out.txt"
+    #     ]
 
-## rules
-rule summarize_ret:
-	input: OUTDIR + "prealm_ret"
-	output: "bashreport.txt"
-	shell:
-		r"""
-		bactopia summary \
-    	--bactopia-path {input} \
-		2> {output}
-		"""
+
 ##########################################
 #######    Genome Tools          #########
 ##########################################
@@ -51,7 +43,7 @@ rule run_ISmapper_module:
 		bactopia \
 		--wf ismapper \
     	--bactopia {input.dir} \
-    	--exclude exclude.txt \
+    	--exclude QCDIR + bactopia-exclude.txt \
 		--reference {input.ref} \
 		2> {output}
 		"""
@@ -64,7 +56,7 @@ rule run_mobsuite_tool:
 		bactopia \
 		--wf mobsuite \
     	--bactopia {input} \
-    	--exclude exclude.txt \
+    	--exclude QCDIR + bactopia-exclude.txt \
 		2> {output}
 		"""
 
@@ -76,7 +68,7 @@ rule run_rgi_tool:
 		bactopia \
 		--wf rgi \
     	--bactopia {input} \
-    	--exclude exclude.txt \
+    	--exclude QCDIR + bactopia-exclude.txt \
 		2> {output}
 		"""
 rule run_plasmidfinder_tool:
@@ -87,7 +79,7 @@ rule run_plasmidfinder_tool:
 		bactopia \
 		--wf plasmidfinder \
     	--bactopia {input} \
-    	--exclude exclude.txt \
+    	--exclude QCDIR + bactopia-exclude.txt \
 		2> {output}
 		"""
 
@@ -103,7 +95,7 @@ rule run_staphtyper_tool:
 		bactopia \
 		--wf staphtyper \
     	--bactopia {input} \
-    	--exclude exclude.txt \
+    	--exclude QCDIR + bactopia-exclude.txt \
 		2> {output}
 		"""
 rule run_sstaphopiasccmec_tool:
@@ -114,7 +106,7 @@ rule run_sstaphopiasccmec_tool:
 		bactopia \
 		--wf staphopiasccmec \
     	--bactopia {input} \
-    	--exclude exclude.txt \
+    	--exclude QCDIR + bactopia-exclude.txt \
 		2> {output}
 		"""
 
@@ -129,7 +121,7 @@ rule run_snippy_module:
 		bactopia \
 		--wf snippy \
     	--bactopia {input.dir} \
-    	--exclude exclude.txt \
+    	--exclude QCDIR + bactopia-exclude.txt \
 		--reference {input.ref} \
 		2> {output}
 		"""
@@ -143,7 +135,7 @@ rule run_mashtree:
 		bactopia \
 		--wf mashtree \
     	--bactopia {input} \
-    	--exclude exclude.txt \
+    	--exclude QCDIR + bactopia-exclude.txt \
 		--use_panaroo \
 		2> {output}
 		"""
@@ -157,7 +149,7 @@ rule run_pangenome_panaroo_module:
 		bactopia \
 		--wf pangenome \
     	--bactopia {input} \
-    	--exclude exclude.txt \
+    	--exclude QCDIR + bactopia-exclude.txt \
 		--use_pirate \
 		2> {output}
 		"""
@@ -169,7 +161,7 @@ rule run_pangenome_pirate_module:
 		bactopia \
 		--wf pangenome \
     	--bactopia {input} \
-    	--exclude exclude.txt \
+    	--exclude QCDIR + bactopia-exclude.txt \
 		--use_pirate \
 		2> {output}
 		"""
@@ -177,6 +169,16 @@ rule run_pangenome_pirate_module:
 ##########################################
 #######          Main            #########
 ##########################################
+rule summarize_ret:
+	input: OUTDIR + "prealm_ret"
+	output: "bashreport.txt"
+	shell:
+		r"""
+		bactopia summary \
+    	--bactopia-path {input} \
+		2> {output}
+		"""
+
 # bactopia runs tools sequentially within its own run_pipeline, details below for flags I have incorporated:
 # gather: increased coverage from default 100 to 300
 # QC: adding fastqc and fastp (this is default)
