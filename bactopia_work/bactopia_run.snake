@@ -21,7 +21,7 @@ os.environ["PATH"] = "/hpc/home/nfb9/miniconda3/envs/bactopia/bin:" + os.environ
 
 ## targets
 rule all:
-	input: "bashreport.txt"
+	input: OUTDIR + "bashreport.txt"
 	# input: expand(os.path.join(OUTDIR, "{file}"), file=[
     #         "ismapper.2out.txt",
     #         "mobsuite.2out.txt",
