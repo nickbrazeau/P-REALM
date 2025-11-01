@@ -22,8 +22,7 @@ os.environ["PATH"] = "/hpc/home/nfb9/miniconda3/envs/bactopia/bin:" + os.environ
 ## targets
 rule all:
 	input: "bashreport.txt"
-    # input:
-    #     [
+	# input: expand(os.path.join(OUTDIR, "{file}"), file=[
     #         "ismapper.2out.txt",
     #         "mobsuite.2out.txt",
     #         "rgi.2out.txt",
@@ -34,8 +33,7 @@ rule all:
     #         "mashtree.2out.txt",
     #         "pangenome_panaroo.2out.txt",
     #         "pangenome_pirate.2out.txt"
-    #     ]
-
+    #     ])
 
 ##########################################
 #######    Genome Tools          #########
