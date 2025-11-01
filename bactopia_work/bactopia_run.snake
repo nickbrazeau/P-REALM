@@ -11,8 +11,7 @@ import sys
 ## read project-specific configuration options
 FASTQ = "/hpc/group/taylorlab/users/nfb/projects/P-REALM/bactopia_work/fastq/"
 REF = "/hpc/group/taylorlab/users/nfb/projects/P-REALM/bactopia_work/ref/CF_000013465.1_ASM1346v1_genomic.gbff"
-DB = "/hpc/group/taylorlab/users/nfb/projects/P-REALM/bactopia_work/baktadb/db.tar.xz"
-EXCLUDE = "/hpc/group/taylorlab/users/nfb/projects/P-REALM/prealm_ret/summary/bactopia-exclude.txt"
+DB = "/hpc/group/taylorlab/users/nfb/projects/P-REALM/bactopia_work/baktadb/baktadb/db-light/"
 OUTDIR = "/hpc/group/taylorlab/users/nfb/projects/P-REALM/bactopia_work/"
 
 # bactopia path resolution
@@ -34,7 +33,7 @@ rule all:
     #         "snippy.2out.txt",
     #         "mashtree.2out.txt",
     #         "pangenome_panaroo.2out.txt",
-    #         "pangenome_pirate.2out.txt"
+    #         "pangenome_pirate.2out.txt" 
     #     ]
 
 
@@ -49,7 +48,7 @@ rule run_ISmapper_module:
 		bactopia \
 		--wf ismapper \
     	--bactopia {input.dir} \
-    	--exclude {EXCLUDE} \
+    	--exclude "/hpc/group/taylorlab/users/nfb/projects/P-REALM/prealm_ret/summary/bactopia-exclude.txt" \
 		--reference {input.ref} \
 		2> {output}
 		"""
@@ -62,7 +61,7 @@ rule run_mobsuite_tool:
 		bactopia \
 		--wf mobsuite \
     	--bactopia {input} \
-    	--exclude {EXCLUDE} \
+    	--exclude "/hpc/group/taylorlab/users/nfb/projects/P-REALM/prealm_ret/summary/bactopia-exclude.txt" \
 		2> {output}
 		"""
 
@@ -74,7 +73,7 @@ rule run_rgi_tool:
 		bactopia \
 		--wf rgi \
     	--bactopia {input} \
-    	--exclude {EXCLUDE} \
+    	--exclude "/hpc/group/taylorlab/users/nfb/projects/P-REALM/prealm_ret/summary/bactopia-exclude.txt" \
 		2> {output}
 		"""
 rule run_plasmidfinder_tool:
@@ -85,7 +84,7 @@ rule run_plasmidfinder_tool:
 		bactopia \
 		--wf plasmidfinder \
     	--bactopia {input} \
-    	--exclude {EXCLUDE} \
+    	--exclude "/hpc/group/taylorlab/users/nfb/projects/P-REALM/prealm_ret/summary/bactopia-exclude.txt" \
 		2> {output}
 		"""
 
@@ -101,7 +100,7 @@ rule run_staphtyper_tool:
 		bactopia \
 		--wf staphtyper \
     	--bactopia {input} \
-    	--exclude {EXCLUDE} \
+    	--exclude "/hpc/group/taylorlab/users/nfb/projects/P-REALM/prealm_ret/summary/bactopia-exclude.txt" \
 		2> {output}
 		"""
 rule run_staphopiasccmec_tool:
@@ -112,7 +111,7 @@ rule run_staphopiasccmec_tool:
 		bactopia \
 		--wf staphopiasccmec \
     	--bactopia {input} \
-    	--exclude {EXCLUDE} \
+    	--exclude "/hpc/group/taylorlab/users/nfb/projects/P-REALM/prealm_ret/summary/bactopia-exclude.txt" \
 		2> {output}
 		"""
 
@@ -127,7 +126,7 @@ rule run_snippy_module:
 		bactopia \
 		--wf snippy \
     	--bactopia {input.dir} \
-    	--exclude {EXCLUDE} \
+    	--exclude "/hpc/group/taylorlab/users/nfb/projects/P-REALM/prealm_ret/summary/bactopia-exclude.txt" \
 		--reference {input.ref} \
 		2> {output}
 		"""
@@ -141,7 +140,7 @@ rule run_mashtree:
 		bactopia \
 		--wf mashtree \
     	--bactopia {input} \
-    	--exclude {EXCLUDE} \
+    	--exclude "/hpc/group/taylorlab/users/nfb/projects/P-REALM/prealm_ret/summary/bactopia-exclude.txt" \
 		2> {output}
 		"""
 
@@ -154,7 +153,7 @@ rule run_pangenome_panaroo_module:
 		bactopia \
 		--wf pangenome \
     	--bactopia {input} \
-    	--exclude {EXCLUDE} \
+    	--exclude "/hpc/group/taylorlab/users/nfb/projects/P-REALM/prealm_ret/summary/bactopia-exclude.txt" \
 		--use_panaroo \
 		2> {output}
 		"""
@@ -166,7 +165,7 @@ rule run_pangenome_pirate_module:
 		bactopia \
 		--wf pangenome \
     	--bactopia {input} \
-    	--exclude {EXCLUDE} \
+    	--exclude "/hpc/group/taylorlab/users/nfb/projects/P-REALM/prealm_ret/summary/bactopia-exclude.txt" \
 		--use_pirate \
 		2> {output}
 		"""
@@ -174,6 +173,7 @@ rule run_pangenome_pirate_module:
 ##########################################
 #######          Main            #########
 ##########################################
+
 rule summarize_ret:
 	input: OUTDIR + "prealm_ret"
 	output: "bashreport.txt"
@@ -196,17 +196,18 @@ rule summarize_ret:
 # Merlin: uses sketches to run species-specific tools; letting it detect SA
 rule run_bactopia_main:
 	input: smpl = OUTDIR + "samples.fofn.txt", db = DB
-	output: OUTDIR + "prealm_ret"
+	output: dir = OUTDIR + "prealm_ret", log = "bactopiamain.2out.txt"
 	shell:
 		r"""
 		bactopia \
     	--samples {input.smpl} \
-    	--coverage 300 \
+		--coverage 300 \
 		--shovill_assembler skesa \
 		--trim \
 		--use_bakta \
 		--bakta_db {input.db} \
-    	--outdir {output}
+    	--outdir {output.dir} \
+		2> {output.log}
 		"""
 
 rule prepare_samples:
