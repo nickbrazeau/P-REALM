@@ -9,7 +9,8 @@ import sys
 
 
 ## read project-specific configuration options
-REF = "/hpc/group/taylorlab/users/nfb/projects/P-REALM/ref/CF_000013465.1_ASM1346v1_genomic.gbff"
+FASTQ = "/hpc/group/taylorlab/users/nfb/projects/P-REALM/bactopia_work/fastq/"
+REF = "/hpc/group/taylorlab/users/nfb/projects/P-REALM/bactopia_work/ref/CF_000013465.1_ASM1346v1_genomic.gbff"
 DB = "/hpc/group/taylorlab/users/nfb/projects/P-REALM/bactopia_work/baktadb/db.tar.xz"
 QCDIR = "/hpc/group/taylorlab/users/nfb/projects/P-REALM/prealm_ret/summary/"
 OUTDIR = "/hpc/group/taylorlab/users/nfb/projects/P-REALM/bactopia_work"

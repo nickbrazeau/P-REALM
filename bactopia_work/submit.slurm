@@ -12,6 +12,7 @@
 #SBATCH --mail-user=nick.brazeau@duke.edu
 
 # Load environment
+conda env create -f env/environment.yml
 conda activate prealm
 
 # run
