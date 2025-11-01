@@ -1,5 +1,9 @@
-# configuration for bactopia pipeline
-logs: jobs
-tmpdir: .tmp 
-threads: 6
-memory: 12
+
+# Bactopia prerequisites (install datasets once per species)
+bactopia_datasets: "/path/to/bactopia-datasets" # e.g., ~/bactopia/datasets
+species: "Staphylococcus aureus"
+
+
+# Core pipeline knobs
+coverage: 100 # target read depth for subsampling
+genome_size: median # or an integer like 2800000 (bp)

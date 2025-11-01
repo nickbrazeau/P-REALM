@@ -2,7 +2,6 @@
 #SBATCH --job-name=prealm_bactopia
 #SBATCH --output=logs/p_realm_%j.out
 #SBATCH --error=logs/p_realm_%j.err
-#SBATCH --partition=general
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=16

@@ -1,0 +1,4 @@
+logs: jobs
+tmpdir: .tmp
+threads: 6
+memory: 12
