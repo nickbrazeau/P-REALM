@@ -33,7 +33,7 @@ rule all:
     #         "snippy.2out.txt",
     #         "mashtree.2out.txt",
     #         "pangenome_panaroo.2out.txt",
-    #         "pangenome_pirate.2out.txt" 
+    #         "pangenome_pirate.2out.txt"
     #     ]
 
 
@@ -42,7 +42,7 @@ rule all:
 ##########################################
 rule run_ISmapper_module:
 	input: dir = OUTDIR + "prealm_ret", ref = REF
-	output: "ismapper.2out.txt"
+	output: OUTDIR + "ismapper.2out.txt"
 	shell:
 		r"""
 		bactopia \
@@ -55,7 +55,7 @@ rule run_ISmapper_module:
 
 rule run_mobsuite_tool:
 	input: OUTDIR + "prealm_ret"
-	output: "mobsuite.2out.txt"
+	output: OUTDIR + "mobsuite.2out.txt"
 	shell:
 		r"""
 		bactopia \
@@ -67,7 +67,7 @@ rule run_mobsuite_tool:
 
 rule run_rgi_tool:
 	input: OUTDIR + "prealm_ret"
-	output: "rgi.2out.txt"
+	output: OUTDIR + "rgi.2out.txt"
 	shell:
 		r"""
 		bactopia \
@@ -78,7 +78,7 @@ rule run_rgi_tool:
 		"""
 rule run_plasmidfinder_tool:
 	input: OUTDIR + "prealm_ret"
-	output: "plasmidfinder.2out.txt"
+	output: OUTDIR + "plasmidfinder.2out.txt"
 	shell:
 		r"""
 		bactopia \
@@ -94,7 +94,7 @@ rule run_plasmidfinder_tool:
 
 rule run_staphtyper_tool:
 	input: OUTDIR + "prealm_ret"
-	output: "staphtyper.2out.txt"
+	output: OUTDIR + "staphtyper.2out.txt"
 	shell:
 		r"""
 		bactopia \
@@ -105,7 +105,7 @@ rule run_staphtyper_tool:
 		"""
 rule run_staphopiasccmec_tool:
 	input: OUTDIR + "prealm_ret"
-	output: "staphopiasccmec.2out.txt"
+	output: OUTDIR + "staphopiasccmec.2out.txt"
 	shell:
 		r"""
 		bactopia \
@@ -120,7 +120,7 @@ rule run_staphopiasccmec_tool:
 ##########################################
 rule run_snippy_module:
 	input: dir = OUTDIR + "prealm_ret", ref = REF
-	output: "snippy.2out.txt"
+	output: OUTDIR + "snippy.2out.txt"
 	shell:
 		r"""
 		bactopia \
@@ -134,7 +134,7 @@ rule run_snippy_module:
 
 rule run_mashtree:
 	input: OUTDIR + "prealm_ret"
-	output: "mashtree.2out.txt"
+	output: OUTDIR + "mashtree.2out.txt"
 	shell:
 		r"""
 		bactopia \
@@ -147,7 +147,7 @@ rule run_mashtree:
 
 rule run_pangenome_panaroo_module:
 	input: OUTDIR + "prealm_ret"
-	output: "pangenome_panaroo.2out.txt"
+	output: OUTDIR + "pangenome_panaroo.2out.txt"
 	shell:
 		r"""
 		bactopia \
@@ -159,7 +159,7 @@ rule run_pangenome_panaroo_module:
 		"""
 rule run_pangenome_pirate_module:
 	input: OUTDIR + "prealm_ret"
-	output: "pangenome_pirate.2out.txt"
+	output: OUTDIR + "pangenome_pirate.2out.txt"
 	shell:
 		r"""
 		bactopia \
@@ -176,7 +176,7 @@ rule run_pangenome_pirate_module:
 
 rule summarize_ret:
 	input: OUTDIR + "prealm_ret"
-	output: "bashreport.txt"
+	output: OUTDIR + "bashreport.txt"
 	shell:
 		r"""
 		bactopia summary \
