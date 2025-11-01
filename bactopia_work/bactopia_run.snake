@@ -12,8 +12,13 @@ import sys
 FASTQ = "/hpc/group/taylorlab/users/nfb/projects/P-REALM/bactopia_work/fastq/"
 REF = "/hpc/group/taylorlab/users/nfb/projects/P-REALM/bactopia_work/ref/CF_000013465.1_ASM1346v1_genomic.gbff"
 DB = "/hpc/group/taylorlab/users/nfb/projects/P-REALM/bactopia_work/baktadb/db.tar.xz"
-QCDIR = "/hpc/group/taylorlab/users/nfb/projects/P-REALM/prealm_ret/summary/"
-OUTDIR = "/hpc/group/taylorlab/users/nfb/projects/P-REALM/bactopia_work"
+EXCLUDE = "/hpc/group/taylorlab/users/nfb/projects/P-REALM/prealm_ret/summary/bactopia-exclude.txt"
+OUTDIR = "/hpc/group/taylorlab/users/nfb/projects/P-REALM/bactopia_work/"
+
+# bactopia path resolution
+os.environ["PATH"] = "/hpc/home/nfb9/miniconda3/envs/bactopia/bin:" + os.environ["PATH"]
+
+
 
 ## targets
 rule all:
@@ -44,7 +49,7 @@ rule run_ISmapper_module:
 		bactopia \
 		--wf ismapper \
     	--bactopia {input.dir} \
-    	--exclude QCDIR + bactopia-exclude.txt \
+    	--exclude {EXCLUDE} \
 		--reference {input.ref} \
 		2> {output}
 		"""
@@ -57,7 +62,7 @@ rule run_mobsuite_tool:
 		bactopia \
 		--wf mobsuite \
     	--bactopia {input} \
-    	--exclude QCDIR + bactopia-exclude.txt \
+    	--exclude {EXCLUDE} \
 		2> {output}
 		"""
 
@@ -69,7 +74,7 @@ rule run_rgi_tool:
 		bactopia \
 		--wf rgi \
     	--bactopia {input} \
-    	--exclude QCDIR + bactopia-exclude.txt \
+    	--exclude {EXCLUDE} \
 		2> {output}
 		"""
 rule run_plasmidfinder_tool:
@@ -80,7 +85,7 @@ rule run_plasmidfinder_tool:
 		bactopia \
 		--wf plasmidfinder \
     	--bactopia {input} \
-    	--exclude QCDIR + bactopia-exclude.txt \
+    	--exclude {EXCLUDE} \
 		2> {output}
 		"""
 
@@ -96,10 +101,10 @@ rule run_staphtyper_tool:
 		bactopia \
 		--wf staphtyper \
     	--bactopia {input} \
-    	--exclude QCDIR + bactopia-exclude.txt \
+    	--exclude {EXCLUDE} \
 		2> {output}
 		"""
-rule run_sstaphopiasccmec_tool:
+rule run_staphopiasccmec_tool:
 	input: OUTDIR + "prealm_ret"
 	output: "staphopiasccmec.2out.txt"
 	shell:
@@ -107,7 +112,7 @@ rule run_sstaphopiasccmec_tool:
 		bactopia \
 		--wf staphopiasccmec \
     	--bactopia {input} \
-    	--exclude QCDIR + bactopia-exclude.txt \
+    	--exclude {EXCLUDE} \
 		2> {output}
 		"""
 
@@ -122,7 +127,7 @@ rule run_snippy_module:
 		bactopia \
 		--wf snippy \
     	--bactopia {input.dir} \
-    	--exclude QCDIR + bactopia-exclude.txt \
+    	--exclude {EXCLUDE} \
 		--reference {input.ref} \
 		2> {output}
 		"""
@@ -136,8 +141,7 @@ rule run_mashtree:
 		bactopia \
 		--wf mashtree \
     	--bactopia {input} \
-    	--exclude QCDIR + bactopia-exclude.txt \
-		--use_panaroo \
+    	--exclude {EXCLUDE} \
 		2> {output}
 		"""
 
@@ -150,8 +154,8 @@ rule run_pangenome_panaroo_module:
 		bactopia \
 		--wf pangenome \
     	--bactopia {input} \
-    	--exclude QCDIR + bactopia-exclude.txt \
-		--use_pirate \
+    	--exclude {EXCLUDE} \
+		--use_panaroo \
 		2> {output}
 		"""
 rule run_pangenome_pirate_module:
@@ -162,7 +166,7 @@ rule run_pangenome_pirate_module:
 		bactopia \
 		--wf pangenome \
     	--bactopia {input} \
-    	--exclude QCDIR + bactopia-exclude.txt \
+    	--exclude {EXCLUDE} \
 		--use_pirate \
 		2> {output}
 		"""
