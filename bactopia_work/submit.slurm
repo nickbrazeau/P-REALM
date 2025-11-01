@@ -12,7 +12,7 @@
 #SBATCH --mail-user=nick.brazeau@duke.edu
 
 # Load environment
-conda activate bactopia
+conda activate prealm
 
 # run
 snakemake \
