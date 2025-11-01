@@ -11,18 +11,18 @@
 #SBATCH --mail-user=nick.brazeau@duke.edu
 
 # Load environment
+source ~/.bashrc
+conda init bash
 conda env create -f env/environment.yml
 conda activate prealm
 
 # run
 snakemake \
     --snakefile bactopia_run.snake \
-    --cores 16 \
-    --jobs 20 \
+    --cores 8 \
+    --printshellcmds \
     --latency-wait 90 \
     --rerun-incomplete \
     --use-conda \
-    --cluster "sbatch --nodes=1 --ntasks=1 --cpus-per-task={threads} --mem={resources.mem_mb}M --time={resources.time}" \
-    --cluster-config config/cluster.yaml \
     --keep-going \
     --directory /hpc/group/taylorlab/users/nfb/projects/P-REALM/
