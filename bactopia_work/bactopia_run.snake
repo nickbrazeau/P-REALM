@@ -46,8 +46,10 @@ rule run_ISmapper_module:
 		bactopia \
 		--wf ismapper \
     	--bactopia {input.dir} \
-    	--exclude "/hpc/group/taylorlab/users/nfb/projects/P-REALM/prealm_ret/summary/bactopia-exclude.txt" \
 		--reference {input.ref} \
+		-qs 8 \
+		--max_cpus 32 \
+    	--exclude "/hpc/group/taylorlab/users/nfb/projects/P-REALM/prealm_ret/summary/bactopia-exclude.txt" \
 		2> {output}
 		"""
 
@@ -59,6 +61,8 @@ rule run_mobsuite_tool:
 		bactopia \
 		--wf mobsuite \
     	--bactopia {input} \
+		-qs 8 \
+		--max_cpus 32 \
     	--exclude "/hpc/group/taylorlab/users/nfb/projects/P-REALM/prealm_ret/summary/bactopia-exclude.txt" \
 		2> {output}
 		"""
@@ -71,6 +75,8 @@ rule run_rgi_tool:
 		bactopia \
 		--wf rgi \
     	--bactopia {input} \
+		-qs 8 \
+		--max_cpus 32 \
     	--exclude "/hpc/group/taylorlab/users/nfb/projects/P-REALM/prealm_ret/summary/bactopia-exclude.txt" \
 		2> {output}
 		"""
@@ -82,6 +88,8 @@ rule run_plasmidfinder_tool:
 		bactopia \
 		--wf plasmidfinder \
     	--bactopia {input} \
+		-qs 8 \
+		--max_cpus 32 \
     	--exclude "/hpc/group/taylorlab/users/nfb/projects/P-REALM/prealm_ret/summary/bactopia-exclude.txt" \
 		2> {output}
 		"""
@@ -98,6 +106,8 @@ rule run_staphtyper_tool:
 		bactopia \
 		--wf staphtyper \
     	--bactopia {input} \
+		-qs 8 \
+		--max_cpus 32 \
     	--exclude "/hpc/group/taylorlab/users/nfb/projects/P-REALM/prealm_ret/summary/bactopia-exclude.txt" \
 		2> {output}
 		"""
@@ -109,6 +119,8 @@ rule run_staphopiasccmec_tool:
 		bactopia \
 		--wf staphopiasccmec \
     	--bactopia {input} \
+		-qs 8 \
+		--max_cpus 32 \
     	--exclude "/hpc/group/taylorlab/users/nfb/projects/P-REALM/prealm_ret/summary/bactopia-exclude.txt" \
 		2> {output}
 		"""
@@ -124,6 +136,8 @@ rule run_snippy_module:
 		bactopia \
 		--wf snippy \
     	--bactopia {input.dir} \
+		-qs 8 \
+		--max_cpus 32 \
     	--exclude "/hpc/group/taylorlab/users/nfb/projects/P-REALM/prealm_ret/summary/bactopia-exclude.txt" \
 		--reference {input.ref} \
 		2> {output}
@@ -138,6 +152,8 @@ rule run_mashtree:
 		bactopia \
 		--wf mashtree \
     	--bactopia {input} \
+		-qs 8 \
+		--max_cpus 32 \
     	--exclude "/hpc/group/taylorlab/users/nfb/projects/P-REALM/prealm_ret/summary/bactopia-exclude.txt" \
 		2> {output}
 		"""
@@ -151,6 +167,8 @@ rule run_pangenome_panaroo_module:
 		bactopia \
 		--wf pangenome \
     	--bactopia {input} \
+		-qs 8 \
+		--max_cpus 32 \
     	--exclude "/hpc/group/taylorlab/users/nfb/projects/P-REALM/prealm_ret/summary/bactopia-exclude.txt" \
 		--use_panaroo \
 		2> {output}
@@ -163,6 +181,8 @@ rule run_pangenome_pirate_module:
 		bactopia \
 		--wf pangenome \
     	--bactopia {input} \
+		-qs 8 \
+		--max_cpus 32 \
     	--exclude "/hpc/group/taylorlab/users/nfb/projects/P-REALM/prealm_ret/summary/bactopia-exclude.txt" \
 		--use_pirate \
 		2> {output}
@@ -179,6 +199,8 @@ rule summarize_ret:
 		r"""
 		bactopia summary \
     	--bactopia-path {input} \
+		-qs 8 \
+		--max_cpus 32 \
 		2> {output}
 		"""
 
@@ -193,12 +215,14 @@ rule summarize_ret:
 # Antimicrobial Resistance: AMR module, default
 # Merlin: uses sketches to run species-specific tools; letting it detect SA
 rule run_bactopia_main:
-	input: smpl = OUTDIR + "samples.fofn.txt", db = DB
+	input: smpl = OUTDIR + "samples.fofn.txt", db = DB, fk = OUTDIR + "bactopiamain.2out.txt"
 	output: dir = OUTDIR + "prealm_ret", log = OUTDIR + "bactopiamain.2out.txt"
 	shell:
 		r"""
 		bactopia \
     	--samples {input.smpl} \
+		-qs 8 \
+		--max_cpus 32 \
 		--coverage 300 \
 		--shovill_assembler skesa \
 		--trim \
