@@ -193,12 +193,12 @@ rule run_pangenome_pirate_module:
 ##########################################
 
 rule summarize_ret:
-	input: OUTDIR + "prealm_ret"
+	input: dir = OUTDIR + "prealm_ret", fk = OUTDIR + "bactopiamain.2out.txt"
 	output: OUTDIR + "bashreport.txt"
 	shell:
 		r"""
 		bactopia summary \
-    	--bactopia-path {input} \
+    	--bactopia-path {input.dir} \
 		-qs 8 \
 		--max_cpus 32 \
 		2> {output}
@@ -215,7 +215,7 @@ rule summarize_ret:
 # Antimicrobial Resistance: AMR module, default
 # Merlin: uses sketches to run species-specific tools; letting it detect SA
 rule run_bactopia_main:
-	input: smpl = OUTDIR + "samples.fofn.txt", db = DB, fk = OUTDIR + "bactopiamain.2out.txt"
+	input: smpl = OUTDIR + "samples.fofn.txt", db = DB
 	output: dir = OUTDIR + "prealm_ret", log = OUTDIR + "bactopiamain.2out.txt"
 	shell:
 		r"""
