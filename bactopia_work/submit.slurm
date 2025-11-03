@@ -16,7 +16,7 @@ conda init bash
 conda env create -f env/environment.yml
 conda activate prealm
 
-# run
+# run snake
 snakemake \
     --snakefile bactopia_run.snake \
     --cores 8 \
