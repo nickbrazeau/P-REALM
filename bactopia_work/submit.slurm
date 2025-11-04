@@ -25,4 +25,4 @@ snakemake \
     --rerun-incomplete \
     --use-conda \
     --keep-going \
-    --directory /hpc/group/taylorlab/users/nfb/projects/P-REALM/
+    --configfile config/cluster.yaml

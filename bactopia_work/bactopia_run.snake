@@ -11,7 +11,7 @@ import sys
 ## read project-specific configuration options
 FASTQ = "/hpc/group/taylorlab/users/nfb/projects/P-REALM/bactopia_work/fastq/"
 REF = "/hpc/group/taylorlab/users/nfb/projects/P-REALM/bactopia_work/ref/CF_000013465.1_ASM1346v1_genomic.gbff"
-DB = "/hpc/group/taylorlab/users/nfb/projects/P-REALM/bactopia_work/baktadb/baktadb/db-light/"
+DB = "/hpc/group/taylorlab/users/nfb/projects/P-REALM/bactopia_work/baktadb/db-light/"
 OUTDIR = "/hpc/group/taylorlab/users/nfb/projects/P-REALM/bactopia_work/"
 
 # bactopia path resolution
