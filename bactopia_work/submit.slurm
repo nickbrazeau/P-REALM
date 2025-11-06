@@ -25,4 +25,3 @@ snakemake \
     --rerun-incomplete \
     --use-conda \
     --keep-going \
-    --default-resources tmpdir=/work/nfb9/projects/P-REALM/bactopia_work/ \
