@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 """
-Snakefile — Bactopia wrapper for pangenome analysis (standard, snippy
+Snakefile — Bactopia wrapper for pangenome analysis (standard, mobilome, pangeome, snippy)
 """
 
 from __future__ import print_function
@@ -16,7 +16,6 @@ OUTDIR = "/hpc/group/taylorlab/users/nfb/projects/P-REALM/bactopia_work/"
 
 # bactopia path resolution
 os.environ["PATH"] = "/hpc/home/nfb9/miniconda3/envs/bactopia/bin:" + os.environ["PATH"]
-
 
 
 ## targets
@@ -216,6 +215,7 @@ rule summarize_ret:
 # Merlin: uses sketches to run species-specific tools; letting it detect SA
 rule run_bactopia_main:
 	input: smpl = OUTDIR + "samples.fofn.txt", db = DB
+	param: mlstconfig = OUTDIR + config/bactopia-mlst.config
 	output: dir = OUTDIR + "prealm_ret", log = OUTDIR + "bactopiamain.2out.txt"
 	shell:
 		r"""
@@ -228,6 +228,7 @@ rule run_bactopia_main:
 		--trim \
 		--use_bakta \
 		--bakta_db {input.db} \
+		--nfconfig {param.mlstconfig} \
     	--outdir {output.dir} \
 		2> {output.log}
 		"""

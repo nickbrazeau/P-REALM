@@ -25,4 +25,5 @@ snakemake \
     --rerun-incomplete \
     --use-conda \
     --keep-going \
-    --configfile config/cluster.yaml
+    --default-resources /work/nfb9/projects/P-REALM/bactopia_work/ \
+    --workdir /work/nfb9/projects/P-REALM/bactopia_work/
