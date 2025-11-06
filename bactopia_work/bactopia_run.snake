@@ -215,7 +215,7 @@ rule summarize_ret:
 # Merlin: uses sketches to run species-specific tools; letting it detect SA
 rule run_bactopia_main:
 	input: smpl = OUTDIR + "samples.fofn.txt", db = DB
-	params: mlstconfig = OUTDIR + config/bactopia-mlst.config
+	params: mlstconfig = os.path.join(OUTDIR, "config", "bactopia-mlst.config")
 	output: dir = OUTDIR + "prealm_ret", log = OUTDIR + "bactopiamain.2out.txt"
 	shell:
 		r"""
