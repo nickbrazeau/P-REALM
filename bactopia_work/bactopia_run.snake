@@ -228,7 +228,7 @@ rule run_bactopia_main:
 		--trim \
 		--use_bakta \
 		--bakta_db {input.db} \
-		--nfconfig {param.mlstconfig} \
+		--nfconfig {params.mlstconfig} \
     	--outdir {output.dir} \
 		2> {output.log}
 		"""
