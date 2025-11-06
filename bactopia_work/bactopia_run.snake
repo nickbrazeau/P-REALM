@@ -223,8 +223,8 @@ rule summarize_ret:
 # Merlin: uses sketches to run species-specific tools; letting it detect SA
 rule run_bactopia_main:
 	input: smpl = os.path.join(outdir, "samples.fofn.txt"), db = DB
-	params: mlstconfig = os.path.join(outdir, "config", "bactopia-mlst.config")
-	output: dir = os.path.join(outdir, "prealm_ret"), log = os.path.join(outdir, "bactopiamain.2out.txt")
+	params: mlstconfig = os.path.join(outdir, "config", "bactopia-mlst.config"), dir = os.path.join(outdir, "prealm_ret")
+	par:  log = os.path.join(outdir, "bactopiamain.2out.txt")
 	shell:
 		r"""
 		bactopia \
@@ -238,7 +238,7 @@ rule run_bactopia_main:
 		--use_bakta \
 		--bakta_db {input.db} \
 		--nfconfig {params.mlstconfig} \
-    	--outdir {output.dir} \
+    	--outdir {params.dir} \
 		2> {output.log}
 		"""
 
