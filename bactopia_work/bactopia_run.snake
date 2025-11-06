@@ -11,12 +11,10 @@ outdir = "/hpc/group/taylorlab/users/nfb/projects/P-REALM/bactopia_work/"
 FASTQ = os.path.join(outdir, "fastq/")
 REF = os.path.join(outdir, "ref/CF_000013465.1_ASM1346v1_genomic.gbff")
 DB = os.path.join(outdir, "baktadb/db-light/")
+os.environ["TMPDIR"] = "/work/nfb9/projects/P-REALM/tmp"
 
 # bactopia path resolution
 os.environ["PATH"] = "/hpc/home/nfb9/miniconda3/envs/bactopia/bin:" + os.environ["PATH"]
-
-default_resources:
-    tmpdir="/work/nfb9/projects/P-REALM/bactopia_work/tmp"
 
 ## targets
 rule all:
