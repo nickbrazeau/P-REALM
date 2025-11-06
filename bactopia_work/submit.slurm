@@ -11,8 +11,10 @@
 #SBATCH --mail-user=nick.brazeau@duke.edu
 
 # Load environment
-export APPTAINER_CACHEDIR=/hpc/home/nfb9/singularity_cache 
-export NXF_SINGULARITY_CACHEDIR=$APPTAINER_CACHEDIR
+source ~/.bashrc
+conda init bash
+conda env create -f env/environment.yml
+conda activate prealm
 
 # run snake
 snakemake \

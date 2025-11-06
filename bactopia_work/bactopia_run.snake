@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 """
-Snakefile — Bactopia wrapper for pangenome analysis (standard, mobilome, pangeome, snippy)
+Snakefile — Bactopia wrapper for pangenome analysis (standard, mobilome, pangenome, snippy)
 """
 
 from __future__ import print_function
@@ -8,13 +8,15 @@ import os
 
 ## project-specific configurations
 outdir = "/hpc/group/taylorlab/users/nfb/projects/P-REALM/bactopia_work/"
-FASTQ = os.path.join(OUTDIR, "fastq/")
-REF = os.path.join(OUTDIR, "ref/CF_000013465.1_ASM1346v1_genomic.gbff")
-DB = os.path.join(OUTDIR, "baktadb/db-light/")
+FASTQ = os.path.join(outdir, "fastq/")
+REF = os.path.join(outdir, "ref/CF_000013465.1_ASM1346v1_genomic.gbff")
+DB = os.path.join(outdir, "baktadb/db-light/")
 
 # bactopia path resolution
 os.environ["PATH"] = "/hpc/home/nfb9/miniconda3/envs/bactopia/bin:" + os.environ["PATH"]
 
+default_resources:
+    tmpdir="/work/nfb9/projects/P-REALM/bactopia_work/tmp"
 
 ## targets
 rule all:
@@ -41,13 +43,14 @@ rule run_ISmapper_module:
 	shell:
 		r"""
 		bactopia \
+		-profile singularity \
 		--wf ismapper \
     	--bactopia {input.dir} \
 		--reference {input.ref} \
 		-qs 8 \
 		--max_cpus 32 \
     	--exclude "/hpc/group/taylorlab/users/nfb/projects/P-REALM/prealm_ret/summary/bactopia-exclude.txt" \
-		2> {output.log}
+		2> {output}
 		"""
 
 rule run_mobsuite_tool:
@@ -56,6 +59,7 @@ rule run_mobsuite_tool:
 	shell:
 		r"""
 		bactopia \
+		-profile singularity \
 		--wf mobsuite \
     	--bactopia {input} \
 		-qs 8 \
@@ -70,6 +74,7 @@ rule run_rgi_tool:
 	shell:
 		r"""
 		bactopia \
+		-profile singularity \
 		--wf rgi \
     	--bactopia {input} \
 		-qs 8 \
@@ -83,6 +88,7 @@ rule run_plasmidfinder_tool:
 	shell:
 		r"""
 		bactopia \
+		-profile singularity \
 		--wf plasmidfinder \
     	--bactopia {input} \
 		-qs 8 \
@@ -101,6 +107,7 @@ rule run_staphtyper_tool:
 	shell:
 		r"""
 		bactopia \
+		-profile singularity \
 		--wf staphtyper \
     	--bactopia {input} \
 		-qs 8 \
@@ -114,6 +121,7 @@ rule run_staphopiasccmec_tool:
 	shell:
 		r"""
 		bactopia \
+		-profile singularity \
 		--wf staphopiasccmec \
     	--bactopia {input} \
 		-qs 8 \
@@ -131,6 +139,7 @@ rule run_snippy_module:
 	shell:
 		r"""
 		bactopia \
+		-profile singularity \
 		--wf snippy \
     	--bactopia {input.dir} \
 		-qs 8 \
@@ -147,6 +156,7 @@ rule run_mashtree:
 	shell:
 		r"""
 		bactopia \
+		-profile singularity \
 		--wf mashtree \
     	--bactopia {input} \
 		-qs 8 \
@@ -162,6 +172,7 @@ rule run_pangenome_panaroo_module:
 	shell:
 		r"""
 		bactopia \
+		-profile singularity \
 		--wf pangenome \
     	--bactopia {input} \
 		-qs 8 \
@@ -176,6 +187,7 @@ rule run_pangenome_pirate_module:
 	shell:
 		r"""
 		bactopia \
+		-profile singularity \
 		--wf pangenome \
     	--bactopia {input} \
 		-qs 8 \
@@ -208,7 +220,7 @@ rule summarize_ret:
 # Assembler: using Shovill-PE with default SKESA. Enable adapter trimming
 # Annotator: using Bakta intead of Prokka default
 # Sketcher: using default (really a sanity check)
-# Sequence Typing: MSLT module, default
+# Sequence Typing: MLST module, default
 # Antimicrobial Resistance: AMR module, default
 # Merlin: uses sketches to run species-specific tools; letting it detect SA
 rule run_bactopia_main:
@@ -218,6 +230,7 @@ rule run_bactopia_main:
 	shell:
 		r"""
 		bactopia \
+		-profile singularity \
     	--samples {input.smpl} \
 		-qs 8 \
 		--max_cpus 32 \
@@ -233,7 +246,7 @@ rule run_bactopia_main:
 
 rule prepare_samples:
 	input: FASTQ
-	output: os.path.join(outdir, "samples.fofn.txt"
+	output: os.path.join(outdir, "samples.fofn.txt")
 	shell:
 		r"""
 		bactopia prepare \
