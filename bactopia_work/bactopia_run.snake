@@ -224,7 +224,7 @@ rule summarize_ret:
 rule run_bactopia_main:
 	input: smpl = os.path.join(outdir, "samples.fofn.txt"), db = DB
 	params: mlstconfig = os.path.join(outdir, "config", "bactopia-mlst.config"), dir = os.path.join(outdir, "prealm_ret")
-	par:  log = os.path.join(outdir, "bactopiamain.2out.txt")
+	output:  log = os.path.join(outdir, "bactopiamain.2out.txt")
 	shell:
 		r"""
 		bactopia \
