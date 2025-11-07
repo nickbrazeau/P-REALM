@@ -18,19 +18,19 @@ os.environ["PATH"] = "/hpc/home/nfb9/miniconda3/envs/bactopia/bin:" + os.environ
 
 ## targets
 rule all:
-	input: os.path.join(outdir, "bashreport.txt")
-	# input: expand(os.path.join(outdir, "{file}"), file=[
-    #         "ismapper.2out.txt",
-    #         "mobsuite.2out.txt",
-    #         "rgi.2out.txt",
-    #         "plasmidfinder.2out.txt",
-    #         "staphtyper.2out.txt",
-    #         "staphopiasccmec.2out.txt",
-    #         "snippy.2out.txt",
-    #         "mashtree.2out.txt",
-    #         "pangenome_panaroo.2out.txt",
-    #         "pangenome_pirate.2out.txt"
-    #     ])
+	# input: os.path.join(outdir, "bashreport.txt")
+	input: expand(os.path.join(outdir, "{file}"), file=[
+            "ismapper.2out.txt",
+            "mobsuite.2out.txt",
+            "rgi.2out.txt",
+            "plasmidfinder.2out.txt",
+            "staphtyper.2out.txt",
+            "staphopiasccmec.2out.txt",
+            "snippy.2out.txt",
+            "mashtree.2out.txt",
+            "pangenome_panaroo.2out.txt",
+            "pangenome_pirate.2out.txt"
+        ])
 
 ##########################################
 #######    Genome Tools          #########
@@ -47,7 +47,7 @@ rule run_ISmapper_module:
 		--reference {input.ref} \
 		-qs 8 \
 		--max_cpus 32 \
-    	--exclude "/hpc/group/taylorlab/users/nfb/projects/P-REALM/prealm_ret/summary/bactopia-exclude.txt" \
+    	--exclude "/hpc/group/taylorlab/users/nfb/projects/P-REALM/bactopia_work/bactopia-exclude.tsv" \
 		2> {output}
 		"""
 
@@ -62,7 +62,7 @@ rule run_mobsuite_tool:
     	--bactopia {input} \
 		-qs 8 \
 		--max_cpus 32 \
-    	--exclude "/hpc/group/taylorlab/users/nfb/projects/P-REALM/prealm_ret/summary/bactopia-exclude.txt" \
+    	--exclude "/hpc/group/taylorlab/users/nfb/projects/P-REALM/bactopia_work/bactopia-exclude.tsv" \
 		2> {output}
 		"""
 
@@ -77,7 +77,7 @@ rule run_rgi_tool:
     	--bactopia {input} \
 		-qs 8 \
 		--max_cpus 32 \
-    	--exclude "/hpc/group/taylorlab/users/nfb/projects/P-REALM/prealm_ret/summary/bactopia-exclude.txt" \
+    	--exclude "/hpc/group/taylorlab/users/nfb/projects/P-REALM/bactopia_work/bactopia-exclude.tsv" \
 		2> {output}
 		"""
 rule run_plasmidfinder_tool:
@@ -91,7 +91,7 @@ rule run_plasmidfinder_tool:
     	--bactopia {input} \
 		-qs 8 \
 		--max_cpus 32 \
-    	--exclude "/hpc/group/taylorlab/users/nfb/projects/P-REALM/prealm_ret/summary/bactopia-exclude.txt" \
+    	--exclude "/hpc/group/taylorlab/users/nfb/projects/P-REALM/bactopia_work/bactopia-exclude.tsv" \
 		2> {output}
 		"""
 
@@ -110,7 +110,7 @@ rule run_staphtyper_tool:
     	--bactopia {input} \
 		-qs 8 \
 		--max_cpus 32 \
-    	--exclude "/hpc/group/taylorlab/users/nfb/projects/P-REALM/prealm_ret/summary/bactopia-exclude.txt" \
+    	--exclude "/hpc/group/taylorlab/users/nfb/projects/P-REALM/bactopia_work/bactopia-exclude.tsv" \
 		2> {output}
 		"""
 rule run_staphopiasccmec_tool:
@@ -124,7 +124,7 @@ rule run_staphopiasccmec_tool:
     	--bactopia {input} \
 		-qs 8 \
 		--max_cpus 32 \
-    	--exclude "/hpc/group/taylorlab/users/nfb/projects/P-REALM/prealm_ret/summary/bactopia-exclude.txt" \
+    	--exclude "/hpc/group/taylorlab/users/nfb/projects/P-REALM/bactopia_work/bactopia-exclude.tsv" \
 		2> {output}
 		"""
 
@@ -142,7 +142,7 @@ rule run_snippy_module:
     	--bactopia {input.dir} \
 		-qs 8 \
 		--max_cpus 32 \
-    	--exclude "/hpc/group/taylorlab/users/nfb/projects/P-REALM/prealm_ret/summary/bactopia-exclude.txt" \
+    	--exclude "/hpc/group/taylorlab/users/nfb/projects/P-REALM/bactopia_work/bactopia-exclude.tsv" \
 		--reference {input.ref} \
 		2> {output}
 		"""
@@ -159,7 +159,7 @@ rule run_mashtree:
     	--bactopia {input} \
 		-qs 8 \
 		--max_cpus 32 \
-    	--exclude "/hpc/group/taylorlab/users/nfb/projects/P-REALM/prealm_ret/summary/bactopia-exclude.txt" \
+    	--exclude "/hpc/group/taylorlab/users/nfb/projects/P-REALM/bactopia_work/bactopia-exclude.tsv" \
 		2> {output}
 		"""
 
@@ -175,7 +175,7 @@ rule run_pangenome_panaroo_module:
     	--bactopia {input} \
 		-qs 8 \
 		--max_cpus 32 \
-    	--exclude "/hpc/group/taylorlab/users/nfb/projects/P-REALM/prealm_ret/summary/bactopia-exclude.txt" \
+    	--exclude "/hpc/group/taylorlab/users/nfb/projects/P-REALM/bactopia_work/bactopia-exclude.tsv" \
 		--use_panaroo \
 		2> {output}
 		"""
@@ -190,7 +190,7 @@ rule run_pangenome_pirate_module:
     	--bactopia {input} \
 		-qs 8 \
 		--max_cpus 32 \
-    	--exclude "/hpc/group/taylorlab/users/nfb/projects/P-REALM/prealm_ret/summary/bactopia-exclude.txt" \
+    	--exclude "/hpc/group/taylorlab/users/nfb/projects/P-REALM/bactopia_work/bactopia-exclude.tsv" \
 		--use_pirate \
 		2> {output}
 		"""
@@ -206,8 +206,6 @@ rule summarize_ret:
 		r"""
 		bactopia summary \
     	--bactopia-path {input.dir} \
-		-qs 8 \
-		--max_cpus 32 \
 		2> {output}
 		"""
 
