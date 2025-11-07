@@ -12,9 +12,8 @@
 
 # Load environment
 source ~/.bashrc
-conda init bash
-conda env create -f env/environment.yml
-conda activate prealm
+micromamba env create -f env/environment.yml
+micromamba activate prealm
 
 # run snake
 snakemake \

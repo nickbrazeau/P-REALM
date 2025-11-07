@@ -9,7 +9,7 @@ import os
 ## project-specific configurations
 outdir = "/hpc/group/taylorlab/users/nfb/projects/P-REALM/bactopia_work/"
 FASTQ = os.path.join(outdir, "fastq/")
-REF = os.path.join(outdir, "ref/CF_000013465.1_ASM1346v1_genomic.gbff")
+REF = os.path.join(outdir, "ref/GCF_000013465.1_ASM1346v1_genomic.gbff")
 DB = os.path.join(outdir, "baktadb/db-light/")
 os.environ["TMPDIR"] = "/work/nfb9/projects/P-REALM/tmp"
 
@@ -43,7 +43,7 @@ rule run_ISmapper_module:
 	shell:
 		r"""
 		bactopia \
-		-profile singularity \
+		-profile apptainer \
 		--wf ismapper \
     	--bactopia {input.dir} \
 		--reference {input.ref} \
@@ -59,7 +59,7 @@ rule run_mobsuite_tool:
 	shell:
 		r"""
 		bactopia \
-		-profile singularity \
+		-profile apptainer \
 		--wf mobsuite \
     	--bactopia {input} \
 		-qs 8 \
@@ -74,7 +74,7 @@ rule run_rgi_tool:
 	shell:
 		r"""
 		bactopia \
-		-profile singularity \
+		-profile apptainer \
 		--wf rgi \
     	--bactopia {input} \
 		-qs 8 \
@@ -88,7 +88,7 @@ rule run_plasmidfinder_tool:
 	shell:
 		r"""
 		bactopia \
-		-profile singularity \
+		-profile apptainer \
 		--wf plasmidfinder \
     	--bactopia {input} \
 		-qs 8 \
@@ -107,7 +107,7 @@ rule run_staphtyper_tool:
 	shell:
 		r"""
 		bactopia \
-		-profile singularity \
+		-profile apptainer \
 		--wf staphtyper \
     	--bactopia {input} \
 		-qs 8 \
@@ -121,7 +121,7 @@ rule run_staphopiasccmec_tool:
 	shell:
 		r"""
 		bactopia \
-		-profile singularity \
+		-profile apptainer \
 		--wf staphopiasccmec \
     	--bactopia {input} \
 		-qs 8 \
@@ -139,7 +139,7 @@ rule run_snippy_module:
 	shell:
 		r"""
 		bactopia \
-		-profile singularity \
+		-profile apptainer \
 		--wf snippy \
     	--bactopia {input.dir} \
 		-qs 8 \
@@ -156,7 +156,7 @@ rule run_mashtree:
 	shell:
 		r"""
 		bactopia \
-		-profile singularity \
+		-profile apptainer \
 		--wf mashtree \
     	--bactopia {input} \
 		-qs 8 \
@@ -172,7 +172,7 @@ rule run_pangenome_panaroo_module:
 	shell:
 		r"""
 		bactopia \
-		-profile singularity \
+		-profile apptainer \
 		--wf pangenome \
     	--bactopia {input} \
 		-qs 8 \
@@ -187,7 +187,7 @@ rule run_pangenome_pirate_module:
 	shell:
 		r"""
 		bactopia \
-		-profile singularity \
+		-profile apptainer \
 		--wf pangenome \
     	--bactopia {input} \
 		-qs 8 \
@@ -228,7 +228,7 @@ rule run_bactopia_main:
 	shell:
 		r"""
 		bactopia \
-		-profile singularity \
+		-profile apptainer \
     	--samples {input.smpl} \
 		-qs 8 \
 		--max_cpus 32 \
