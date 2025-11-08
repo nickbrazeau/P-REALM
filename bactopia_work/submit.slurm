@@ -7,6 +7,7 @@
 #SBATCH --cpus-per-task=16
 #SBATCH --mem=64G
 #SBATCH --time=96:00:00
+#SBATCH --export=APPTAINER_CACHEDIR=/hpc/group/taylorlab/containers/apptainer_cache,NXF_SINGULARITY_CACHEDIR=/hpc/group/taylorlab/containers/apptainer_cache
 #SBATCH --mail-type=END,FAIL
 #SBATCH --mail-user=nick.brazeau@duke.edu
 
