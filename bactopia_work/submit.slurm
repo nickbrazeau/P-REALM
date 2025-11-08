@@ -12,13 +12,13 @@
 
 # Load environment
 source ~/.bashrc
-micromamba env create -f env/environment.yml
+#micromamba env create -f env/environment.yml
 micromamba activate prealm
 
 # run snake
 snakemake \
     --snakefile bactopia_run.snake \
-    --cores 8 \
+    --cores 24 \
     --printshellcmds \
     --latency-wait 90 \
     --rerun-incomplete \

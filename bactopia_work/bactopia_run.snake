@@ -49,6 +49,7 @@ rule run_ISmapper_module:
 		--reference {input.ref} \
 		-qs 8 \
 		--max_cpus 32 \
+		--nfconfig /hpc/group/taylorlab/users/nfb/projects/P-REALM/bactopia_work/config/nextflow-snakemake.config \
     	--exclude "/hpc/group/taylorlab/users/nfb/projects/P-REALM/bactopia_work/bactopia-exclude.tsv" \
 		2> {output}
 		"""
@@ -64,6 +65,7 @@ rule run_mobsuite_tool:
     	--bactopia {input} \
 		-qs 8 \
 		--max_cpus 32 \
+		--nfconfig /hpc/group/taylorlab/users/nfb/projects/P-REALM/bactopia_work/config/nextflow-snakemake.config \
     	--exclude "/hpc/group/taylorlab/users/nfb/projects/P-REALM/bactopia_work/bactopia-exclude.tsv" \
 		2> {output}
 		"""
@@ -79,6 +81,7 @@ rule run_rgi_tool:
     	--bactopia {input} \
 		-qs 8 \
 		--max_cpus 32 \
+		--nfconfig /hpc/group/taylorlab/users/nfb/projects/P-REALM/bactopia_work/config/nextflow-snakemake.config \
     	--exclude "/hpc/group/taylorlab/users/nfb/projects/P-REALM/bactopia_work/bactopia-exclude.tsv" \
 		2> {output}
 		"""
@@ -93,6 +96,7 @@ rule run_plasmidfinder_tool:
     	--bactopia {input} \
 		-qs 8 \
 		--max_cpus 32 \
+		--nfconfig /hpc/group/taylorlab/users/nfb/projects/P-REALM/bactopia_work/config/nextflow-snakemake.config \
     	--exclude "/hpc/group/taylorlab/users/nfb/projects/P-REALM/bactopia_work/bactopia-exclude.tsv" \
 		2> {output}
 		"""
@@ -112,6 +116,7 @@ rule run_staphtyper_tool:
     	--bactopia {input} \
 		-qs 8 \
 		--max_cpus 32 \
+		--nfconfig /hpc/group/taylorlab/users/nfb/projects/P-REALM/bactopia_work/config/nextflow-snakemake.config \
     	--exclude "/hpc/group/taylorlab/users/nfb/projects/P-REALM/bactopia_work/bactopia-exclude.tsv" \
 		2> {output}
 		"""
@@ -126,6 +131,7 @@ rule run_staphopiasccmec_tool:
     	--bactopia {input} \
 		-qs 8 \
 		--max_cpus 32 \
+		--nfconfig /hpc/group/taylorlab/users/nfb/projects/P-REALM/bactopia_work/config/nextflow-snakemake.config \
     	--exclude "/hpc/group/taylorlab/users/nfb/projects/P-REALM/bactopia_work/bactopia-exclude.tsv" \
 		2> {output}
 		"""
@@ -144,6 +150,7 @@ rule run_snippy_module:
     	--bactopia {input.dir} \
 		-qs 8 \
 		--max_cpus 32 \
+		--nfconfig /hpc/group/taylorlab/users/nfb/projects/P-REALM/bactopia_work/config/nextflow-snakemake.config \
     	--exclude "/hpc/group/taylorlab/users/nfb/projects/P-REALM/bactopia_work/bactopia-exclude.tsv" \
 		--reference {input.ref} \
 		2> {output}
@@ -161,6 +168,7 @@ rule run_mashtree:
     	--bactopia {input} \
 		-qs 8 \
 		--max_cpus 32 \
+		--nfconfig /hpc/group/taylorlab/users/nfb/projects/P-REALM/bactopia_work/config/nextflow-snakemake.config \
     	--exclude "/hpc/group/taylorlab/users/nfb/projects/P-REALM/bactopia_work/bactopia-exclude.tsv" \
 		2> {output}
 		"""
@@ -178,6 +186,7 @@ rule run_pangenome_panaroo_module:
 		-qs 8 \
 		--max_cpus 32 \
     	--exclude "/hpc/group/taylorlab/users/nfb/projects/P-REALM/bactopia_work/bactopia-exclude.tsv" \
+		--nfconfig /hpc/group/taylorlab/users/nfb/projects/P-REALM/bactopia_work/config/nextflow-snakemake.config \
 		--use_panaroo \
 		2> {output}
 		"""
@@ -193,6 +202,7 @@ rule run_pangenome_pirate_module:
 		-qs 8 \
 		--max_cpus 32 \
     	--exclude "/hpc/group/taylorlab/users/nfb/projects/P-REALM/bactopia_work/bactopia-exclude.tsv" \
+		--nfconfig /hpc/group/taylorlab/users/nfb/projects/P-REALM/bactopia_work/config/nextflow-snakemake.config \
 		--use_pirate \
 		2> {output}
 		"""
