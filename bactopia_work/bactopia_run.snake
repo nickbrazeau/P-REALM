@@ -19,27 +19,11 @@ os.environ["PATH"] = "/hpc/home/nfb9/miniconda3/envs/bactopia/bin:" + os.environ
 ## targets
 rule all:
 #	input: os.path.join(outdir, "bashreport.txt")
-	input: expand(os.path.join(outdir, "{file}"), file=[ "ismapper.2out.txt", "mobsuite.2out.txt", "rgi.2out.txt", "plasmidfinder.2out.txt", "staphtyper.2out.txt", "staphopiasccmec.2out.txt", "snippy.2out.txt", "mashtree.2out.txt", "pangenome_panaroo.2out.txt", "pangenome_pirate.2out.txt" ])
+	input: expand(os.path.join(outdir, "{file}"), file=[ "mobsuite.2out.txt", "rgi.2out.txt", "plasmidfinder.2out.txt", "staphtyper.2out.txt", "staphopiasccmec.2out.txt", "snippy.2out.txt", "mashtree.2out.txt", "pangenome_panaroo.2out.txt", "pangenome_pirate.2out.txt" ])
 
 ##########################################
 #######    Genome Tools          #########
 ##########################################
-rule run_ISmapper_module:
-	input: dir = os.path.join(outdir, "prealm_ret"), ref = REF
-	output: os.path.join(outdir, "ismapper.2out.txt")
-	shell:
-		r"""
-		bactopia \
-		-profile apptainer \
-		--wf ismapper \
-    	--bactopia {input.dir} \
-		--reference {input.ref} \
-		-qs 8 \
-		--max_cpus 32 \
-		--nfconfig /hpc/group/taylorlab/users/nfb/projects/P-REALM/bactopia_work/config/nextflow-snakemake.config \
-    	--exclude "/hpc/group/taylorlab/users/nfb/projects/P-REALM/bactopia_work/bactopia-exclude.tsv" \
-		2> {output}
-		"""
 
 rule run_mobsuite_tool:
 	input: os.path.join(outdir, "prealm_ret")
