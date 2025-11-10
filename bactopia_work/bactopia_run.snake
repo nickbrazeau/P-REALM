@@ -19,7 +19,7 @@ os.environ["PATH"] = "/hpc/home/nfb9/miniconda3/envs/bactopia/bin:" + os.environ
 
 ## targets
 rule all:
-	input: os.path.join(outdir, "bashreport.txt")
+	input: os.path.join(logdir, "bashreport.txt")
 #	input: expand(os.path.join(logdir, "{file}"), file=[ "mobsuite.2out.txt", "rgi.2out.txt", "plasmidfinder.2out.txt", "staphtyper.2out.txt", "staphopiasccmec.2out.txt", "snippy.2out.txt", "mashtree.2out.txt", "pangenome_panaroo.2out.txt", "pangenome_pirate.2out.txt" ])
 
 ##########################################
@@ -184,7 +184,7 @@ rule run_pangenome_pirate_module:
 ##########################################
 
 rule summarize_ret:
-	input: dir = os.path.join(outdir, "prealm_ret"), fk = os.path.join(outdir, "bactopiamain.2out.txt")
+	input: dir = os.path.join(outdir, "prealm_ret"), fk = os.path.join(logdir, "bactopiamain.2out.txt")
 	output: os.path.join(logdir, "bashreport.txt")
 	shell:
 		r"""
