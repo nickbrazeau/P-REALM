@@ -7,8 +7,8 @@ from __future__ import print_function
 import os
 
 ## project-specific configurations
-outdir = "/hpc/group/taylorlab/users/nfb/projects/P-REALM/bactopia_work/"
-logdir = "/hpc/group/taylorlab/users/nfb/projects/P-REALM/bactopia_work/logs/"
+outdir = "/work/nfb9/projects/P-REALM/bactopia_work/"
+logdir = "/work/nfb9/projects/P-REALM/bactopia_work/logs/"
 FASTQ = os.path.join(outdir, "fastq/")
 REF = os.path.join(outdir, "ref/GCF_000013465.1_ASM1346v1_genomic.gbff")
 DB = os.path.join(outdir, "baktadb/db-light/")

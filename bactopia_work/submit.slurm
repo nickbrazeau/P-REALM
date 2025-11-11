@@ -5,7 +5,7 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=24
-#SBATCH --mem=64G
+#SBATCH --mem=512G
 #SBATCH --time=96:00:00
 #SBATCH --mail-type=END,FAIL
 #SBATCH --mail-user=nick.brazeau@duke.edu
