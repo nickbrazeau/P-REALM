@@ -7,6 +7,7 @@ from __future__ import print_function
 import os
 
 ## project-specific configurations
+indir = "/hpc/group/taylorlab/users/nfb/projects/P-REALM/bactopia_work"
 outdir = "/work/nfb9/projects/P-REALM/bactopia_work/"
 logdir = "/work/nfb9/projects/P-REALM/bactopia_work/logs/"
 FASTQ = os.path.join(outdir, "fastq/")
@@ -226,7 +227,7 @@ rule run_bactopia_main:
 
 rule prepare_samples:
 	input: FASTQ
-	output: os.path.join(outdir, "samples.fofn.txt")
+	output: os.path.join(indir, "samples.fofn.txt")
 	shell:
 		r"""
 		bactopia prepare \
