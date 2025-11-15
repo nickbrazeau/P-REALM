@@ -2,8 +2,8 @@
 #SBATCH --job-name=prealm_bactopia
 #SBATCH --output=logs/bactopia_%j.out
 #SBATCH --error=logs/bactopia_%j.err
-#SBATCH --cpus-per-task=2
-#SBATCH --mem=16G
+#SBATCH --cpus-per-task=8
+#SBATCH --mem=64G
 #SBATCH --time=72:00:00
 # env
 source ~/.bashrc
