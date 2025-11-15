@@ -1,16 +1,10 @@
 #!/bin/bash
 #SBATCH --job-name=prealm_bactopia
-#SBATCH --output=logs/p_realm_%j.out
-#SBATCH --error=logs/p_realm_%j.err
-#SBATCH --nodes=1
-#SBATCH --ntasks=1
-#SBATCH --cpus-per-task=48
-#SBATCH --mem=512G
-#SBATCH --time=96:00:00
-#SBATCH --mail-type=END,FAIL
-#SBATCH --mail-user=nick.brazeau@duke.edu
-#SBATCH --export=ALL,APPTAINER_CACHEDIR=/hpc/group/taylorlab/containers/apptainer_cache,NXF_APPTAINER_CACHEDIR=/hpc/group/taylorlab/containers/apptainer_cache
-
+#SBATCH --output=logs/bactopia_%j.out
+#SBATCH --error=logs/bactopia_%j.err
+#SBATCH --cpus-per-task=2
+#SBATCH --mem=16G
+#SBATCH --time=72:00:00
 # env
 source ~/.bashrc
 micromamba activate prealm
@@ -24,10 +18,6 @@ export NXF_APPTAINER_OPTS="--env NUMBA_DISABLE_JIT=1"
 unset SINGULARITY_CACHEDIR NXF_SINGULARITY_CACHEDIR NXF_SINGULARITY_OPTS
 
 # run
-snakemake \
-  --snakefile bactopia_run.snake \
-  --cores 48 \
-  --printshellcmds \
-  --latency-wait 90 \
-  --rerun-incomplete \
-  --keep-going
+cd /hpc/group/taylorlab/users/nfb/projects/P-REALM/bactopia_work
+mkdir -p logs
+bash bactopia_run.sh
