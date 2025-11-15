@@ -60,7 +60,7 @@ bactopia prepare \
 # Antimicrobial Resistance: AMR module, default
 # Merlin: uses sketches to run species-specific tools; letting it detect SA
 bactopia \
--profile apptainer,slurm \
+-profile apptainer \
 --samples "${indir}/samples.fofn.txt" \
 --coverage 200 \
 --shovill_assembler skesa \
@@ -84,7 +84,7 @@ bactopia summary	--bactopia-path "${PREALM_RET}" \
 # ---------------------------
 # staphtyper
 bactopia \
-  -profile apptainer,slurm \
+  -profile apptainer \
   --wf staphtyper \
   --bactopia "${PREALM_RET}" \
   --nfconfig "${NF_CONFIG}" \
@@ -93,7 +93,7 @@ bactopia \
 
 # staphopiasccmec
 bactopia \
-  -profile apptainer,slurm \
+  -profile apptainer \
   --wf staphopiasccmec \
   --bactopia "${PREALM_RET}" \
   --nfconfig "${NF_CONFIG}" \
@@ -105,7 +105,7 @@ bactopia \
 # ---------------------------
 # Mobsuite
 bactopia \
-  -profile apptainer,slurm \
+  -profile apptainer \
   --wf mobsuite \
   --bactopia "${PREALM_RET}" \
   --nfconfig "${NF_CONFIG}" \
@@ -114,7 +114,7 @@ bactopia \
 
 # run_rgi
 bactopia \
-  -profile apptainer,slurm \
+  -profile apptainer \
   --wf rgi \
   --bactopia "${PREALM_RET}" \
   --nfconfig "${NF_CONFIG}" \
@@ -123,7 +123,7 @@ bactopia \
 
 # plasmid finder
  bactopia \
-  -profile apptainer,slurm \
+  -profile apptainer \
   --wf plasmidfinder \
   --bactopia "${PREALM_RET}" \
   --nfconfig "${NF_CONFIG}" \
@@ -135,7 +135,7 @@ bactopia \
 # ---------------------------
 # snippy
 bactopia \
-  -profile apptainer,slurm \
+  -profile apptainer \
   --wf snippy \
   --bactopia "${PREALM_RET}" \
   --nfconfig "${NF_CONFIG}" \
@@ -145,7 +145,7 @@ bactopia \
 
 # mashtree
 bactopia \
-  -profile apptainer,slurm \
+  -profile apptainer \
   --wf mashtree \
   --bactopia "${PREALM_RET}" \
   -qs 8 \
@@ -156,7 +156,7 @@ bactopia \
 
 # pangenome panaroo
 bactopia \
-  -profile apptainer,slurm \
+  -profile apptainer \
   --wf pangenome \
   --bactopia "${PREALM_RET}" \
   --exclude "${EXCLUDE_TSV}" \
@@ -166,7 +166,7 @@ bactopia \
 
 # pangenome pirate
 bactopia \
-  -profile apptainer,slurm \
+  -profile apptainer \
   --wf pangenome \
   --bactopia "${PREALM_RET}" \
   --exclude "${EXCLUDE_TSV}" \
