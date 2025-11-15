@@ -184,7 +184,7 @@ rule run_pangenome_pirate_module:
 
 rule summarize_ret:
 	input: dir = os.path.join(outdir, "prealm_ret"), fk = os.path.join(indir, "logs", "bactopiamain.2out.txt")
-	output: os.path.join(indir, "bashreport.txt")
+	output: os.path.join(indir, "logs", "bashreport.txt")
 	shell:
 		r"""
 		bactopia summary \
