@@ -13,8 +13,7 @@ outdir="/work/nfb9/projects/P-REALM/bactopia_work"
 REF="${indir}/ref/GCF_000013465.1_ASM1346v1_genomic.gbff"
 DB="${indir}/baktadb/db-light"
 
-# Configs and helper paths
-MLST_CONFIG="${indir}/config/bactopia-mlst.config"
+# Configs and helper paths 
 NF_CONFIG="${indir}/config/slurm-nextflow.config"
 EXCLUDE_TSV="${indir}/bactopia-exclude.tsv"
 LOGDIR="${indir}/logs"
@@ -67,7 +66,7 @@ bactopia \
 --trim \
 --use_bakta \
 --bakta_db "${DB}" \
---nfconfig "${MLST_CONFIG}" \
+--nfconfig "${NF_CONFIG}" \
 --outdir "${PREALM_RET}" \
 --max_cpus 32 \
 --max_memory 400.GB \
