@@ -31,7 +31,7 @@ rule run_mobsuite_tool:
 	shell:
 		r"""
 		bactopia \
-		-profile apptainer \
+		-profile slurm,apptainer \
 		--wf mobsuite \
     	--bactopia {input} \
 		-qs 8 \
@@ -47,7 +47,7 @@ rule run_rgi_tool:
 	shell:
 		r"""
 		bactopia \
-		-profile apptainer \
+		-profile slurm,apptainer \
 		--wf rgi \
     	--bactopia {input} \
 		-qs 8 \
@@ -62,7 +62,7 @@ rule run_plasmidfinder_tool:
 	shell:
 		r"""
 		bactopia \
-		-profile apptainer \
+		-profile slurm,apptainer \
 		--wf plasmidfinder \
     	--bactopia {input} \
 		-qs 8 \
@@ -82,7 +82,7 @@ rule run_staphtyper_tool:
 	shell:
 		r"""
 		bactopia \
-		-profile apptainer \
+		-profile slurm,apptainer \
 		--wf staphtyper \
     	--bactopia {input} \
 		-qs 8 \
@@ -97,7 +97,7 @@ rule run_staphopiasccmec_tool:
 	shell:
 		r"""
 		bactopia \
-		-profile apptainer \
+		-profile slurm,apptainer \
 		--wf staphopiasccmec \
     	--bactopia {input} \
 		-qs 8 \
@@ -116,7 +116,7 @@ rule run_snippy_module:
 	shell:
 		r"""
 		bactopia \
-		-profile apptainer \
+		-profile slurm,apptainer \
 		--wf snippy \
     	--bactopia {input.dir} \
 		-qs 8 \
@@ -134,7 +134,7 @@ rule run_mashtree:
 	shell:
 		r"""
 		bactopia \
-		-profile apptainer \
+		-profile slurm,apptainer \
 		--wf mashtree \
     	--bactopia {input} \
 		-qs 8 \
@@ -151,7 +151,7 @@ rule run_pangenome_panaroo_module:
 	shell:
 		r"""
 		bactopia \
-		-profile apptainer \
+		-profile slurm,apptainer \
 		--wf pangenome \
     	--bactopia {input} \
 		-qs 8 \
@@ -167,7 +167,7 @@ rule run_pangenome_pirate_module:
 	shell:
 		r"""
 		bactopia \
-		-profile apptainer \
+		-profile slurm,apptainer \
 		--wf pangenome \
     	--bactopia {input} \
 		-qs 8 \
@@ -210,7 +210,7 @@ rule run_bactopia_main:
 		r"""
 		export MPLCONFIGDIR=/work/nfb9/projects/P-REALM/tmp/matplotlib; mkdir -p "$MPLCONFIGDIR";
 		bactopia \
-		-profile apptainer \
+		-profile slurm,apptainer \
     	--samples {input.smpl} \
 		-qs 8 \
 		--max_cpus 32 \
