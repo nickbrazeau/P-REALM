@@ -4,7 +4,7 @@
 #SBATCH --error=logs/p_realm_%j.err
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=24
+#SBATCH --cpus-per-task=48
 #SBATCH --mem=512G
 #SBATCH --time=96:00:00
 #SBATCH --mail-type=END,FAIL
@@ -26,7 +26,7 @@ unset SINGULARITY_CACHEDIR NXF_SINGULARITY_CACHEDIR NXF_SINGULARITY_OPTS
 # run
 snakemake \
   --snakefile bactopia_run.snake \
-  --cores 24 \
+  --cores 48 \
   --printshellcmds \
   --latency-wait 90 \
   --rerun-incomplete \

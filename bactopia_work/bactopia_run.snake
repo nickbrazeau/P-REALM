@@ -9,7 +9,6 @@ import os
 ## project-specific configurations
 indir = "/hpc/group/taylorlab/users/nfb/projects/P-REALM/bactopia_work"
 outdir = "/work/nfb9/projects/P-REALM/bactopia_work/"
-logdir = "/work/nfb9/projects/P-REALM/bactopia_work/logs/"
 REF = os.path.join(indir, "ref/GCF_000013465.1_ASM1346v1_genomic.gbff")
 DB = os.path.join(indir, "baktadb/db-light/")
 os.environ["TMPDIR"] = "/work/nfb9/projects/P-REALM/tmp"
@@ -19,8 +18,8 @@ os.environ["PATH"] = "/hpc/home/nfb9/miniconda3/envs/bactopia/bin:" + os.environ
 
 ## targets
 rule all:
-	input: os.path.join(logdir, "bashreport.txt")
-#	input: expand(os.path.join(logdir, "{file}"), file=[ "mobsuite.2out.txt", "rgi.2out.txt", "plasmidfinder.2out.txt", "staphtyper.2out.txt", "staphopiasccmec.2out.txt", "snippy.2out.txt", "mashtree.2out.txt", "pangenome_panaroo.2out.txt", "pangenome_pirate.2out.txt" ])
+	input: os.path.join(indir, "logs", "bashreport.txt")
+#	input: expand(os.path.join(indir, "logs", "{file}"), file=[ "mobsuite.2out.txt", "rgi.2out.txt", "plasmidfinder.2out.txt", "staphtyper.2out.txt", "staphopiasccmec.2out.txt", "snippy.2out.txt", "mashtree.2out.txt", "pangenome_panaroo.2out.txt", "pangenome_pirate.2out.txt" ])
 
 ##########################################
 #######    Genome Tools          #########
@@ -28,7 +27,7 @@ rule all:
 
 rule run_mobsuite_tool:
 	input: os.path.join(outdir, "prealm_ret")
-	output: os.path.join(logdir, "mobsuite.2out.txt")
+	output: os.path.join(indir, "logs", "mobsuite.2out.txt")
 	shell:
 		r"""
 		bactopia \
@@ -44,7 +43,7 @@ rule run_mobsuite_tool:
 
 rule run_rgi_tool:
 	input: os.path.join(outdir, "prealm_ret")
-	output: os.path.join(logdir, "rgi.2out.txt")
+	output: os.path.join(indir, "logs", "rgi.2out.txt")
 	shell:
 		r"""
 		bactopia \
@@ -59,7 +58,7 @@ rule run_rgi_tool:
 		"""
 rule run_plasmidfinder_tool:
 	input: os.path.join(outdir, "prealm_ret")
-	output: os.path.join(logdir, "plasmidfinder.2out.txt")
+	output: os.path.join(indir, "logs", "plasmidfinder.2out.txt")
 	shell:
 		r"""
 		bactopia \
@@ -79,7 +78,7 @@ rule run_plasmidfinder_tool:
 
 rule run_staphtyper_tool:
 	input: os.path.join(outdir, "prealm_ret")
-	output: os.path.join(logdir, "staphtyper.2out.txt")
+	output: os.path.join(indir, "logs", "staphtyper.2out.txt")
 	shell:
 		r"""
 		bactopia \
@@ -94,7 +93,7 @@ rule run_staphtyper_tool:
 		"""
 rule run_staphopiasccmec_tool:
 	input: os.path.join(outdir, "prealm_ret")
-	output: os.path.join(logdir, "staphopiasccmec.2out.txt")
+	output: os.path.join(indir, "logs", "staphopiasccmec.2out.txt")
 	shell:
 		r"""
 		bactopia \
@@ -113,7 +112,7 @@ rule run_staphopiasccmec_tool:
 ##########################################
 rule run_snippy_module:
 	input: dir = os.path.join(outdir, "prealm_ret"), ref = REF
-	output: os.path.join(logdir, "snippy.2out.txt")
+	output: os.path.join(indir, "logs", "snippy.2out.txt")
 	shell:
 		r"""
 		bactopia \
@@ -131,7 +130,7 @@ rule run_snippy_module:
 
 rule run_mashtree:
 	input: os.path.join(outdir, "prealm_ret")
-	output: os.path.join(logdir, "mashtree.2out.txt")
+	output: os.path.join(indir, "logs", "mashtree.2out.txt")
 	shell:
 		r"""
 		bactopia \
@@ -148,7 +147,7 @@ rule run_mashtree:
 
 rule run_pangenome_panaroo_module:
 	input: os.path.join(outdir, "prealm_ret")
-	output: os.path.join(logdir, "pangenome_panaroo.2out.txt")
+	output: os.path.join(indir, "logs", "pangenome_panaroo.2out.txt")
 	shell:
 		r"""
 		bactopia \
@@ -164,7 +163,7 @@ rule run_pangenome_panaroo_module:
 		"""
 rule run_pangenome_pirate_module:
 	input: os.path.join(outdir, "prealm_ret")
-	output: os.path.join(logdir, "pangenome_pirate.2out.txt")
+	output: os.path.join(indir, "logs", "pangenome_pirate.2out.txt")
 	shell:
 		r"""
 		bactopia \
@@ -184,8 +183,8 @@ rule run_pangenome_pirate_module:
 ##########################################
 
 rule summarize_ret:
-	input: dir = os.path.join(outdir, "prealm_ret"), fk = os.path.join(logdir, "bactopiamain.2out.txt")
-	output: os.path.join(logdir, "bashreport.txt")
+	input: dir = os.path.join(outdir, "prealm_ret"), fk = os.path.join(indir, "logs", "bactopiamain.2out.txt")
+	output: os.path.join(indir, "bashreport.txt")
 	shell:
 		r"""
 		bactopia summary \
@@ -206,22 +205,24 @@ rule summarize_ret:
 rule run_bactopia_main:
 	input: smpl = os.path.join(indir, "samples.fofn.txt"), db = DB
 	params: mlstconfig = os.path.join(indir, "config", "bactopia-mlst.config"),
-	output:  dir = os.path.join(outdir, "prealm_ret"), log = os.path.join(logdir, "bactopiamain.2out.txt")
+	output:  dir = os.path.join(outdir, "prealm_ret"), log = os.path.join(indir, "logs", "bactopiamain.2out.txt")
 	shell:
 		r"""
+		export MPLCONFIGDIR=/work/nfb9/projects/P-REALM/tmp/matplotlib; mkdir -p "$MPLCONFIGDIR";
 		bactopia \
 		-profile apptainer \
     	--samples {input.smpl} \
 		-qs 8 \
 		--max_cpus 32 \
-		--coverage 300 \
+		--coverage 100 \
 		--shovill_assembler skesa \
 		--trim \
 		--use_bakta \
 		--bakta_db {input.db} \
 		--nfconfig {params.mlstconfig} \
     	--outdir {output.dir} \
-		2> {output.log}
+		2> {output.log};
+		echo "done with main" >> {output.log}
 		"""
 
 rule prepare_samples:
