@@ -13,7 +13,7 @@ outdir="/work/nfb9/projects/P-REALM/bactopia_work"
 REF="${indir}/ref/GCF_000013465.1_ASM1346v1_genomic.gbff"
 DB="${indir}/baktadb/db-light"
 
-# Configs and helper paths 
+# Configs and helper paths
 NF_CONFIG="${indir}/config/slurm-nextflow.config"
 EXCLUDE_TSV="${indir}/bactopia-exclude.tsv"
 LOGDIR="${indir}/logs"
@@ -21,8 +21,7 @@ PREALM_RET="${outdir}/prealm_ret"
 
 # ---------------------------
 # Environment
-# ---------------------------
-export TMPDIR="/work/nfb9/projects/P-REALM/tmp"
+# --------------------------- 
 export PATH="/hpc/home/nfb9/miniconda3/envs/bactopia/bin:${PATH}"
 export MPLCONFIGDIR="/work/nfb9/projects/P-REALM/tmp/matplotlib"
 export NUMBA_DISABLE_JIT=1 # JIT off globally (Nextflow task-level config also sets this for Gubbins)
