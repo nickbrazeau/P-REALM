@@ -23,7 +23,7 @@ PREALM_RET="${outdir}/prealm_ret"
 # ---------------------------
 # Environment
 # ---------------------------
-export PATH="/hpc/home/nfb9/miniconda3/envs/bactopia/bin:${PATH}"
+export PATH="//hpc/home/nfb9/micromamba/envs/prealm/bin:${PATH}"
 export MPLCONFIGDIR="/work/nfb9/projects/P-REALM/tmp/matplotlib"
 export NUMBA_DISABLE_JIT=1 # JIT off globally (Nextflow task-level config also sets this for Gubbins)
 export APPTAINERENV_NUMBA_DISABLE_JIT=1
