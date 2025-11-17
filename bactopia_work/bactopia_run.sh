@@ -44,7 +44,6 @@ bactopia prepare \
 --path "${indir}/fastq" \
 --species "Staphylococcus aureus" \
 --genome-size 2800000 \
---workdir /work/nfb9/projects-P-REALM/nxf_work \
 > "${indir}/samples.fofn.txt"
 
 # Main
@@ -69,14 +68,12 @@ bactopia \
 --nfconfig /hpc/group/taylorlab/users/nfb/projects/P-REALM/bactopia_work/config/slurm-nextflow.config \
 --outdir "${PREALM_RET}" \
 --max_cpus 32 \
---max_memory 400.GB \
---workdir /work/nfb9/projects-P-REALM/nxf_work \
+--max_memory 400.GB \ 
 2> "${LOGDIR}/bactopiamain.2out.txt"
 
 # summary for exclude file
 bactopia summary	--bactopia-path "${PREALM_RET}" \
 --outdir "${indir}" \
---workdir /work/nfb9/projects-P-REALM/nxf_work \
 2> "${LOGDIR}/bashreport.txt"
 
 
@@ -90,7 +87,6 @@ bactopia \
   --bactopia "${PREALM_RET}" \
   --nfconfig /hpc/group/taylorlab/users/nfb/projects/P-REALM/bactopia_work/config/slurm-nextflow.config \
   --exclude "${EXCLUDE_TSV}" \
-  --workdir /work/nfb9/projects-P-REALM/nxf_work \
   2> "${LOGDIR}/staphtyper.2out.txt"
 
 # staphopiasccmec
@@ -100,7 +96,6 @@ bactopia \
   --bactopia "${PREALM_RET}" \
   --nfconfig /hpc/group/taylorlab/users/nfb/projects/P-REALM/bactopia_work/config/slurm-nextflow.config \
   --exclude "${EXCLUDE_TSV}" \
-  --workdir /work/nfb9/projects-P-REALM/nxf_work \
   2> "${LOGDIR}/staphopiasccmec.2out.txt"
 
 # ---------------------------
@@ -113,7 +108,6 @@ bactopia \
   --bactopia "${PREALM_RET}" \
   --nfconfig /hpc/group/taylorlab/users/nfb/projects/P-REALM/bactopia_work/config/slurm-nextflow.config \
   --exclude "${EXCLUDE_TSV}" \
-  --workdir /work/nfb9/projects-P-REALM/nxf_work \
   2> "${LOGDIR}/mobsuite.2out.txt"
 
 # run_rgi
@@ -123,7 +117,6 @@ bactopia \
   --bactopia "${PREALM_RET}" \
   --nfconfig /hpc/group/taylorlab/users/nfb/projects/P-REALM/bactopia_work/config/slurm-nextflow.config \
   --exclude "${EXCLUDE_TSV}" \
-  --workdir /work/nfb9/projects-P-REALM/nxf_work \
   2> "${LOGDIR}/rgi.2out.txt"
 
 # plasmid finder
@@ -133,7 +126,6 @@ bactopia \
   --bactopia "${PREALM_RET}" \
   --nfconfig /hpc/group/taylorlab/users/nfb/projects/P-REALM/bactopia_work/config/slurm-nextflow.config \
   --exclude "${EXCLUDE_TSV}" \
-  --workdir /work/nfb9/projects-P-REALM/nxf_work \
   2> "${LOGDIR}/plasmidfinder.2out.txt"
 
 # ---------------------------
@@ -147,7 +139,6 @@ bactopia \
   --nfconfig /hpc/group/taylorlab/users/nfb/projects/P-REALM/bactopia_work/config/slurm-nextflow.config \
   --exclude "${EXCLUDE_TSV}" \
   --reference "${REF}" \
-  --workdir /work/nfb9/projects-P-REALM/nxf_work \
   2> "${LOGDIR}/snippy.2out.txt"
 
 # mashtree
@@ -159,7 +150,6 @@ bactopia \
   --max_cpus 32 \
   --nfconfig /hpc/group/taylorlab/users/nfb/projects/P-REALM/bactopia_work/config/slurm-nextflow.config \
   --exclude "${EXCLUDE_TSV}" \
-  --workdir /work/nfb9/projects-P-REALM/nxf_work \
   2> "${LOGDIR}/mashtree.2out.txt"
 
 # pangenome panaroo
@@ -170,7 +160,6 @@ bactopia \
   --exclude "${EXCLUDE_TSV}" \
   --nfconfig /hpc/group/taylorlab/users/nfb/projects/P-REALM/bactopia_work/config/slurm-nextflow.config \
   --use_panaroo \
-  --workdir /work/nfb9/projects-P-REALM/nxf_work \
   2> "${LOGDIR}/pangenome_panaroo.2out.txt"
 
 # pangenome pirate
@@ -181,7 +170,6 @@ bactopia \
   --exclude "${EXCLUDE_TSV}" \
   --nfconfig /hpc/group/taylorlab/users/nfb/projects/P-REALM/bactopia_work/config/slurm-nextflow.config \
   --use_pirate \
-  --workdir /work/nfb9/projects-P-REALM/nxf_work \
   2> "${LOGDIR}/pangenome_pirate.2out.txt"
 
 # ---------------------------
