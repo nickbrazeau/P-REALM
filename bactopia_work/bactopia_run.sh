@@ -23,7 +23,7 @@ PREALM_RET="${outdir}/prealm_ret"
 # ---------------------------
 # Environment
 # ---------------------------
-export PATH="//hpc/home/nfb9/micromamba/envs/prealm/bin:${PATH}"
+export PATH="/hpc/home/nfb9/micromamba/envs/prealm/bin:${PATH}"
 export MPLCONFIGDIR="/work/nfb9/projects/P-REALM/tmp/matplotlib"
 export NUMBA_DISABLE_JIT=1 # JIT off globally (Nextflow task-level config also sets this for Gubbins)
 export APPTAINERENV_NUMBA_DISABLE_JIT=1
@@ -31,7 +31,7 @@ export NXF_APPTAINER_OPTS="--env NUMBA_DISABLE_JIT=1"
 unset SINGULARITY_CACHEDIR NXF_SINGULARITY_CACHEDIR NXF_SINGULARITY_OPTS # ensure no singularity vars shadow apptainer
 
 # dirs we need
-mkdir -p "${LOGDIR}" "${outdir}" "${TMPDIR}" "${MPLCONFIGDIR}" "${matplotlib}"
+mkdir -p "${LOGDIR}" "${outdir}" "${MPLCONFIGDIR}" "${matplotlib}"
 
 
 # -----------------------------------------------
