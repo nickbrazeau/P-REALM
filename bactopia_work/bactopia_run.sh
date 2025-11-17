@@ -68,11 +68,11 @@ bactopia \
 --nfconfig /hpc/group/taylorlab/users/nfb/projects/P-REALM/bactopia_work/config/slurm-nextflow.config \
 --outdir "${PREALM_RET}" \
 --max_cpus 32 \
---max_memory 400.GB \ 
+--max_memory 400.GB \
 2> "${LOGDIR}/bactopiamain.2out.txt"
 
 # summary for exclude file
-bactopia summary	--bactopia-path "${PREALM_RET}" \
+bactopia summary --bactopia-path "${PREALM_RET}" \
 --outdir "${indir}" \
 2> "${LOGDIR}/bashreport.txt"
 
@@ -120,7 +120,7 @@ bactopia \
   2> "${LOGDIR}/rgi.2out.txt"
 
 # plasmid finder
- bactopia \
+bactopia \
   -profile apptainer \
   --wf plasmidfinder \
   --bactopia "${PREALM_RET}" \
