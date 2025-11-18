@@ -7,6 +7,7 @@
 #SBATCH --time=72:00:00
 # env
 source ~/.bashrc
+eval "$(micromamba shell hook --shell bash)"
 micromamba activate prealm
 
 # JIT off globally (Nextflow task-level config also sets this for Gubbins)
