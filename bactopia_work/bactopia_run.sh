@@ -14,7 +14,7 @@ REF="${indir}/ref/GCF_000013465.1_ASM1346v1_genomic.gbff"
 DB="${indir}/baktadb/db-light"
 matplotlib="/work/nfb9/projects/P-REALM/tmp/matplotlib"
 # Configs and helper paths
-EXCLUDE_TSV="${indir}/bactopia-exclude.tsv"
+EXCLUDE_TSV="${outdir}/bactopia-exclude.tsv"
 LOGDIR="${indir}/logs"
 PREALM_RET="${outdir}/prealm_ret"
 GUBBINS='/work/nfb9/gubbins_tmp'
@@ -25,10 +25,6 @@ GUBBINS='/work/nfb9/gubbins_tmp'
 # ---------------------------
 export PATH="/hpc/home/nfb9/micromamba/envs/prealm/bin:${PATH}"
 export MPLCONFIGDIR="/work/nfb9/projects/P-REALM/tmp/matplotlib"
-export NUMBA_DISABLE_JIT=1 # JIT off globally (Nextflow task-level config also sets this for Gubbins)
-export APPTAINERENV_NUMBA_DISABLE_JIT=1
-export NXF_APPTAINER_OPTS="--env NUMBA_DISABLE_JIT=1"
-unset SINGULARITY_CACHEDIR NXF_SINGULARITY_CACHEDIR NXF_SINGULARITY_OPTS # ensure no singularity vars shadow apptainer
 
 # dirs we need
 mkdir -p "${LOGDIR}" "${outdir}" "${MPLCONFIGDIR}" "${matplotlib}" "${GUBBINS}"
@@ -45,7 +41,7 @@ bactopia prepare \
 --path "${indir}/fastq" \
 --species "Staphylococcus aureus" \
 --genome-size 2800000 \
-> "${indir}/samples.fofn.txt"
+> "${outdir}/samples.fofn.txt"
 
 # Main
 # bactopia runs tools sequentially within its own run_pipeline, details below for flags I have incorporated:
@@ -60,7 +56,7 @@ bactopia prepare \
 # Merlin: uses sketches to run species-specific tools; letting it detect SA
 bactopia \
 -profile apptainer \
---samples "${indir}/samples.fofn.txt" \
+--samples "${outdir}/samples.fofn.txt" \
 --coverage 200 \
 --shovill_assembler skesa \
 --trim \
@@ -74,7 +70,7 @@ bactopia \
 
 # summary for exclude file
 bactopia summary --bactopia-path "${PREALM_RET}" \
---outdir "${indir}" \
+--outdir "${outdir}" \
 2> "${LOGDIR}/bashreport.txt"
 
 
@@ -161,17 +157,9 @@ bactopia \
   --use_panaroo \
   2> "${LOGDIR}/pangenome_panaroo.2out.txt"
 
-# pangenome pirate
-bactopia \
-  -profile apptainer \
-  --wf pangenome \
-  --bactopia "${PREALM_RET}" \
-  --exclude "${EXCLUDE_TSV}" \
-  --nfconfig /hpc/group/taylorlab/users/nfb/projects/P-REALM/bactopia_work/config/slurm-nextflow.config \
-  --use_pirate \
-  2> "${LOGDIR}/pangenome_pirate.2out.txt"
 
 # ---------------------------
-# EOF
+# tidy up
 # ---------------------------
+rm -rf /hpc/group/taylorlab/users/nfb/projects/P-REALM/bactopia_work/work/
 echo "[$(date)] All steps completed. Cheers 🍻!"
