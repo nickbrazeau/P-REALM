@@ -17,6 +17,7 @@ matplotlib="/work/nfb9/projects/P-REALM/tmp/matplotlib"
 EXCLUDE_TSV="${indir}/bactopia-exclude.tsv"
 LOGDIR="${indir}/logs"
 PREALM_RET="${outdir}/prealm_ret"
+GUBBINS='/work/nfb9/gubbins_tmp'
 
 
 # ---------------------------
@@ -30,7 +31,7 @@ export NXF_APPTAINER_OPTS="--env NUMBA_DISABLE_JIT=1"
 unset SINGULARITY_CACHEDIR NXF_SINGULARITY_CACHEDIR NXF_SINGULARITY_OPTS # ensure no singularity vars shadow apptainer
 
 # dirs we need
-mkdir -p "${LOGDIR}" "${outdir}" "${MPLCONFIGDIR}" "${matplotlib}"
+mkdir -p "${LOGDIR}" "${outdir}" "${MPLCONFIGDIR}" "${matplotlib}" "${GUBBINS}"
 
 
 # -----------------------------------------------
@@ -146,8 +147,6 @@ bactopia \
   -profile apptainer \
   --wf mashtree \
   --bactopia "${PREALM_RET}" \
-  -qs 8 \
-  --max_cpus 32 \
   --nfconfig /hpc/group/taylorlab/users/nfb/projects/P-REALM/bactopia_work/config/slurm-nextflow.config \
   --exclude "${EXCLUDE_TSV}" \
   2> "${LOGDIR}/mashtree.2out.txt"
