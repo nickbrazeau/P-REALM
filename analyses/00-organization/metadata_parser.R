@@ -32,8 +32,9 @@ fq_join <- dplyr::left_join(fq_raw_R1, fq_raw_R2, by = "S_No") %>%
   dplyr::select(S_No, R1, R2)
 
 # now mrsa
-mrsa_phen <- readr::read_csv("~/Desktop/MRSA_phenotypes.csv") %>%
-  dplyr::select(c("S_No", "Sample_ID_Phenotype", "Clin"))
+mrsa_phen <- readr::read_csv("data/meta/MRSA_phenotypes.csv") %>%
+  dplyr::select(c("S_No", "Sample_ID", "Phenotype")) %>%
+  dplyr::mutate(nm = paste0("M", Sample_ID))
 
 # bring together
 combined <- dplyr::full_join(mrsa_phen, fq_join, by = "S_No")
