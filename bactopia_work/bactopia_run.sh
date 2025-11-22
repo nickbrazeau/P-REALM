@@ -70,6 +70,7 @@ bactopia \
 
 # summary for exclude file
 bactopia summary --bactopia-path "${PREALM_RET}" \
+--max_contigs 150 \
 --outdir "${outdir}" \
 2> "${LOGDIR}/bashreport.txt"
 
