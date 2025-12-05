@@ -1,1 +1,8 @@
 .Rproj.user
+
+CLAUDE.md
+data/derived/
+
+results/
+
+.claude/

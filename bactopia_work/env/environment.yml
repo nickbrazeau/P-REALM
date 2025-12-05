@@ -1,0 +1,14 @@
+name: prealm
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - python>=3.11
+  - snakemake>=9.13.4
+  - mamba
+  - bactopia>=3.2.0
+  - nextflow>=23.10.1
+  - openjdk>=17
+  - pyseer
+  - bakta
