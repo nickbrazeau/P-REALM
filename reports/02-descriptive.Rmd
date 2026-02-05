@@ -1,0 +1,352 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(echo = T, warning = F, message = F, eval = T, results = 'hide',
+                      fig.align = 'center', fig.width = 8, fig.height = 8)
+knitr::opts_knit$set(root.dir = here::here())
+```
+```{r}
+library(tidyverse)
+library(cowplot)
+library(DT)
+set.seed(48)
+```
+```{r}
+# read in meta-data
+mtdt <- readr::read_csv("data/meta/combined_mtdt.csv") %>%
+  dplyr::select(c("S_No", "Sample_ID", "Phenotype", "nm"))
+excludedsmpl <- readr::read_csv("data/derived/excluded_smpls.csv")
+source("R/themes.R")
+
+```
+
+## Descriptive Analyses
+
+### MSLT Typing & Hospital Epi 
+```{r}
+mslt <- readRDS("results/typing_out.rds")
+```
+
+#### MSLT Table Overview (Wide)
+```{r}
+mslt$typing_summ %>% 
+  DT::datatable(.,
+                rownames = F,
+                extensions='Buttons',
+                options = list(
+                  searching = T,
+                  pageLength = 10,
+                  dom = 'Bfrtip',
+                  autoWidth = TRUE,
+                  buttons = c('csv')))
+```
+
+#### MSLT & Staphotyper Summary Comparison
+How does agr compare: https://pubmed-ncbi-nlm-nih-gov.proxy.lib.duke.edu/35044202/
+PMID: 35044202
+```{r}
+mslt$mlstsummout %>% 
+  dplyr::select(c(-"diff")) %>% 
+  tidyr::pivot_longer(., cols = c("Persistent", "Resolving"),
+                      names_to = "Phenotype", values_to = "STsumm") %>% 
+  ggplot() + 
+  geom_bar(aes(x = ST, y = STsumm, fill = Phenotype), stat="identity", color="black", position = position_dodge()) +
+  scale_fill_viridis_d("Phenotype") +
+  labs(
+    title = "Counts of ST by Phenotype",
+    x = "ST",
+    y = "Counts") +
+  plot_theme
+
+```
+
+**Conclusion**: _No discernible MSLT differences_. 
+
+### Antimicrobial Resistance
+Ran with AMRFinder and RGI modules. 
+```{r}
+AMR <- readRDS("results/AMR_out.rds")
+```
+
+#### Combined Table Overview (Long)
+```{r}
+AMR$AMRRGIcombtidy %>% 
+  DT::datatable(.,
+                rownames = F,
+                extensions='Buttons',
+                options = list(
+                  searching = T,
+                  pageLength = 10,
+                  dom = 'Bfrtip',
+                  autoWidth = TRUE,
+                  buttons = c('csv')))
+```
+
+#### Confusion Matrices
+##### Sample-Level
+```{r}
+AMR$smplconfusionmatrix %>% 
+  knitr::kable(.)
+```
+##### Gene-Level
+```{r}
+AMR$geneconfusionmatrix %>% 
+  knitr::kable(.)
+```
+
+#### Comparison Amongst Samples
+This is all genes (x-axis) versus samples (y-axis).
+```{r}
+amrdr <- AMR$AMRPA %>% 
+  dplyr::left_join(., mtdt, by = "S_No") %>% 
+  dplyr::select(-c("Sample_ID", "nm")) %>% 
+  dplyr::select(c("S_No", "Phenotype", dplyr::everything()))
+
+amrdr %>%
+  tidyr::pivot_longer(., cols = -c("S_No", "Phenotype"),
+                      names_to = "gene", values_to = "pa") %>%
+  ggplot() +
+  geom_tile(aes(x = gene, y = S_No, fill = pa)) +
+  map_theme +
+  labs(
+    title = "Presence-Absence AMRGene-Sample Matrix",
+    x = "Genes",
+    y = "Samples") +
+  scale_fill_viridis_c() +
+  plot_theme +
+  theme(
+    plot.title = element_text(family = "Helvetica", face = "bold", hjust = 0.5, size = 12),
+    axis.title = element_blank(),
+    axis.text = element_blank(),
+    legend.position = "none"
+  )
+
+
+
+```
+
+
+Stepping down to genes with some variability, such that we 5-95% of samples contain gene of interest.  
+```{r}
+
+keepcols <- colSums(amrdr[,3:ncol(amrdr)], na.rm = T)/nrow(amrdr)
+keepcols <- keepcols < 0.95 & keepcols > 0.05
+
+amrdr[,c(T, T, keepcols)] %>%
+  tidyr::pivot_longer(., cols = -c("S_No", "Phenotype"),
+                      names_to = "gene", values_to = "pa") %>%
+  ggplot() +
+  geom_tile(aes(x = gene, y = S_No, fill = pa)) +
+  plot_theme +
+  labs(
+    title = "Presence-Absence Gene-Sample Matrix",
+    x = "Genes",
+    y = "Samples") +
+  scale_fill_viridis_c() +
+  theme(
+    plot.title = element_text(family = "Helvetica", face = "bold", hjust = 0.5, size = 12),
+    axis.title = element_blank(),
+    axis.text.y = element_blank(),
+    axis.text.x = element_text(family = "Helvetica", hjust = 1, size = 6, angle = 45),
+    legend.position = "none"
+  )
+
+
+```
+
+```{r}
+amrdr[,c(T, T, keepcols)] %>%
+  dplyr::filter(Phenotype != "unknown") %>% 
+  tidyr::pivot_longer(., cols = -c("S_No", "Phenotype"),
+                      names_to = "gene", values_to = "pa") %>%
+  dplyr::group_by(gene, Phenotype) %>% 
+  dplyr::summarise(
+    pasum = sum(pa, na.rm = T)
+  ) %>% 
+  ggplot() + 
+  geom_bar(aes(x = gene, y = pasum, fill = Phenotype), stat="identity", color="black", position = position_dodge()) +
+  scale_fill_viridis_d("Phenotype") +
+  labs(
+    title = "AMR-Genes by Phenotype",
+    x = "Genes",
+    y = "Samples") +
+  theme(
+    plot.title = element_text(family = "Helvetica", face = "bold", hjust = 0.5, size = 12),
+    axis.title = element_blank(),
+    axis.text.y = element_blank(),
+    axis.text.x = element_text(family = "Helvetica", hjust = 1, size = 6, angle = 45),
+    legend.position = "none"
+  )
+```
+
+### Mobile Genetic Units
+```{r}
+MOB <- readRDS("results/MOB_out.rds")
+```
+#### Combined Table Overview (Wide/Long)
+```{r}
+MOB$pfmobcomb %>% 
+  DT::datatable(.,
+                rownames = F,
+                extensions='Buttons',
+                options = list(
+                  searching = T,
+                  pageLength = 10,
+                  dom = 'Bfrtip',
+                  autoWidth = TRUE,
+                  buttons = c('csv')))
+```
+
+#### Confusion Matrices
+##### Gene-Level
+```{r}
+MOB$mobconfusionmatrix %>% 
+  knitr::kable(.)
+```
+
+#### Comparison Amongst Samples
+This is all genes (x-axis) versus samples (y-axis).
+```{r}
+mobdf <- MOB$MOBPA %>% 
+  dplyr::left_join(., mtdt, by = "S_No") %>% 
+  dplyr::select(-c("Sample_ID", "nm")) %>% 
+  dplyr::select(c("S_No", "Phenotype", dplyr::everything()))
+
+mobdf %>%
+  tidyr::pivot_longer(., cols = -c("S_No", "Phenotype"),
+                      names_to = "gene", values_to = "pa") %>%
+  dplyr::mutate(pa = purrr::map_dbl(pa, function(x) ifelse(is.null(x), 0, 1))) %>% 
+  ggplot() +
+  geom_tile(aes(x = gene, y = S_No, fill = pa)) +
+  map_theme +
+  labs(
+    title = "Presence-Absence MOB-Sample Matrix",
+    x = "Genes",
+    y = "Samples") +
+  scale_fill_viridis_c() +
+  plot_theme +
+  theme(
+    plot.title = element_text(family = "Helvetica", face = "bold", hjust = 0.5, size = 12),
+    axis.title = element_blank(),
+    axis.text = element_blank(),
+    legend.position = "none"
+  )
+
+
+
+```
+
+
+Stepping down to genes with some variability, such that we 5-95% of samples contain gene of interest.  
+```{r}
+keepcols <- colSums(MOB$MOBPAmatrix, na.rm = T)/nrow(MOB$MOBPAmatrix)
+keepcols <- keepcols < 0.95 & keepcols > 0.05
+
+mobdf[,c(T, T, keepcols)] %>%
+  tidyr::pivot_longer(., cols = -c("S_No", "Phenotype"),
+                      names_to = "gene", values_to = "pa") %>%
+  dplyr::mutate(pa = purrr::map_dbl(pa, function(x) ifelse(is.null(x), 0, 1))) %>% 
+  ggplot() +
+  geom_tile(aes(x = gene, y = S_No, fill = pa)) +
+  plot_theme +
+  labs(
+    title = "Presence-Absence MOB-Sample Matrix",
+    x = "Genes",
+    y = "Samples") +
+  scale_fill_viridis_c() +
+  theme(
+    plot.title = element_text(family = "Helvetica", face = "bold", hjust = 0.5, size = 12),
+    axis.title = element_blank(),
+    axis.text.y = element_blank(),
+    axis.text.x = element_text(family = "Helvetica", hjust = 1, size = 6, angle = 45),
+    legend.position = "none"
+  )
+
+
+```
+
+```{r}
+mobdf[,c(T, T, keepcols)] %>%
+  tidyr::pivot_longer(., cols = -c("S_No", "Phenotype"),
+                      names_to = "gene", values_to = "pa") %>%
+  dplyr::mutate(pa = purrr::map_dbl(pa, function(x) ifelse(is.null(x), 0, 1))) %>% 
+  dplyr::filter(Phenotype != "unknown") %>% 
+  dplyr::group_by(gene, Phenotype) %>% 
+  dplyr::summarise(
+    pasum = sum(pa, na.rm = T)
+  ) %>% 
+  ggplot() + 
+  geom_bar(aes(x = gene, y = pasum, fill = Phenotype), stat="identity", color="black", position = position_dodge()) +
+  scale_fill_viridis_d("Phenotype") +
+  labs(
+    title = "MOB-Genes by Phenotype",
+    x = "Genes",
+    y = "Samples") +
+  plot_theme + 
+  theme(
+    plot.title = element_text(family = "Helvetica", face = "bold", hjust = 0.5, size = 12),
+    axis.title = element_blank(),
+    axis.text.y = element_blank(),
+    axis.text.x = element_text(family = "Helvetica", hjust = 1, size = 6, angle = 45),
+    legend.position = "none"
+  )
+```
+
+
+### Pangenome 
+```{r}
+panaroo <- readRDS("results/panaroo_out.rds")
+```
+
+#### Core (Clean) Genome
+Defined as loci that are conserved/identical amongst >=95% of samples and have a low Shannon Entropy and the cloud genome (seen in <1% of samples).
+```{r}
+tibble::tibble(Gene = panaroo$genomes$coregenomelowent ) %>% 
+  dplyr::left_join(., panaroo$panaroo_gen_annot) %>% 
+  DT::datatable(.,
+                rownames = F,
+                extensions='Buttons',
+                options = list(
+                  searching = T,
+                  pageLength = 10,
+                  dom = 'Bfrtip',
+                  autoWidth = TRUE,
+                  buttons = c('csv')))
+```
+
+#### Shell Genome
+Defined as loci not within the core genome (conserved/identical amongst >=95% of samples) and the cloud genome (seen in <1% of samples). 
+```{r}
+tibble::tibble(Gene = panaroo$genomes$shellgenome ) %>% 
+  dplyr::left_join(., panaroo$panaroo_gen_annot) %>% 
+  DT::datatable(.,
+                rownames = F,
+                extensions='Buttons',
+                options = list(
+                  searching = T,
+                  pageLength = 10,
+                  dom = 'Bfrtip',
+                  autoWidth = TRUE,
+                  buttons = c('csv')))
+```
+
+#### Shell Genome vs Phenotype 
+```{r}
+panaroo$paFigShell_facet
+```
+
+#### Whole Genome Gene/Loci Count by Phenotype 
+Pretty minute differences.... 
+```{r}
+panaroo$GeneCountPlot_bypheno
+```
+
+### Core SNPs 
+```{r}
+vcf <- readRDS("results/vcf_out.RDS")
+```
+Number of SNPs in the core genome: `r nrow(vcf)` 

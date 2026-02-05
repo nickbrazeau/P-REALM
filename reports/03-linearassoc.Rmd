@@ -1,0 +1,48 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(echo = T, warning = F, message = F, eval = T, results = 'hide',
+                      fig.align = 'center', fig.width = 8, fig.height = 8)
+knitr::opts_knit$set(root.dir = here::here())
+```
+```{r}
+library(tidyverse)
+library(cowplot)
+library(DT)
+library(knitr)
+library(kableExtra)
+set.seed(48)
+```
+
+## Linear Associations
+Using PCA to analyze sample clines and gene contributions from the Panaroo output and Snippy (VCF/SNPs) output, respectively. 
+```{r}
+pca <- readRDS("results/linear_assoc.RDS")
+
+```
+### Panaroo
+#### PanGenome
+Structure apparent but not specific to phenotype of interest. No "smoking gun" loci loadings. More polygenic?  
+```{r}
+pca$panPA_pcaPlotObj
+pca$panlocicont
+```
+
+#### Shell Genome
+Recapitulated pattern 
+
+```{r}
+pca$panPAshell_pcaPlotObj
+pca$shelllocicont
+```
+
+### Snippy
+Some very tight clustering. Wonder if this is MLST. Need to explore SNPs more pending loci of interest (less likely this is a SNP driving these changes that missed at the gene level by Panaroo - but maybe)
+```{r}
+pca$vcf_pcaPlotObj
+pca$vcflocicont
+```

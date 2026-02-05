@@ -1,0 +1,21 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(echo = T, warning = F, message = F, eval = T, results = 'hide',
+                      fig.align = 'center', fig.width = 8, fig.height = 8)
+knitr::opts_knit$set(root.dir = here::here())
+```
+```{r}
+library(tidyverse)
+library(cowplot)
+library(DT)
+library(knitr)
+library(kableExtra)
+library(igraph)
+library(tidygraph)
+set.seed(48)
+```
