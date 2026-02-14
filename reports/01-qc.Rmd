@@ -1,0 +1,62 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(echo = T, warning = F, message = F, eval = T, results = 'hide',
+                      fig.align = 'center', fig.width = 8, fig.height = 8)
+knitr::opts_knit$set(root.dir = here::here())
+```
+```{r}
+library(tidyverse)
+library(cowplot)
+library(DT)
+library(knitr)
+library(kableExtra)
+set.seed(48)
+```
+
+
+## Quality Control
+```{r}
+qc <- readRDS("results/qc_ret_out.rds")
+```
+
+### Assembly Table Overview
+Wide, detailed table-overview with alignment characteristics. 
+```{r}
+qc$qctbl
+
+```
+
+Plan to exclude samples with >200 contigs, indicating poor assembly and quality. Those samples are: 
+```{r,  results = 'show'}
+qc$excludedsmpl %>% 
+  knitr::kable(.)
+```
+
+### Visualizing Assembly Metrics 
+```{r}
+qc$qcplots
+```
+
+### Visualizing GC Content for Sequence Consistency
+```{r}
+qc$gccont_plot
+```
+
+### Batch Effects
+Samples were run over two different instruments. Thus, possibility for batch effects. Can use PCA to visualize. 
+
+```{r}
+btch <- readRDS("results/bacth_qc.RDS")
+```
+
+```{r, results="show"}
+btch$panPA_pcaPlotObj_batch
+```
+```{r, results="show"}
+btch$vcf_pcaPlotObj_batch
+```

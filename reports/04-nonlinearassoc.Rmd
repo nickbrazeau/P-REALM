@@ -1,0 +1,35 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(echo = T, warning = F, message = F, eval = T, results = 'hide',
+                      fig.align = 'center', fig.width = 8, fig.height = 8)
+knitr::opts_knit$set(root.dir = here::here())
+```
+```{r}
+library(tidyverse)
+library(cowplot)
+library(DT)
+library(knitr)
+library(kableExtra)
+```
+
+## Nonlinear Associations
+Using Networks to analyze sample clines and gene contributions from the Panaroo output: Shell Genome and Masked Shell Genomes 
+```{r}
+net <- readRDS("results/network_out.RDS")
+
+```
+### Panaroo
+#### Shell Genome
+```{r, results="show"}
+net$shell_net_plot
+```
+
+#### Masked-Shell Genome
+```{r, results="show"}
+net$shell_masked_net_plot
+```

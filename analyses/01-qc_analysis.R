@@ -44,7 +44,7 @@ qctbl <- qc %>%
 out <- append(out, list(qctbl = qctbl))
 
 #............................................................
-# Hardcoded excludes samples with >150 contigs
+# Hardcoded excludes samples with >X contigs
 #   this was based on reasonable cutoffs
 #...........................................................
 excludedsmpl <- qc %>%
@@ -122,7 +122,7 @@ qcplots <- cowplot::plot_grid(p1,p2,p3,p4, nrow = 2)
 # p5
 (gccont_plot <- qc %>%
     dplyr::filter(!c(S_No %in% excludedsmpl$S_No)) %>%
-    dplyr::mutate(gc_content = (contig_percent_g + contig_percent_c)/2) %>%
+    dplyr::mutate(gc_content = (contig_percent_g + contig_percent_c)) %>%
     ggplot() +
     geom_point(aes(x = n50_contig_length, y = gc_content,
                    shape = Phenotype, color = Sample_ID),
@@ -141,3 +141,15 @@ saveRDS(out, file = "results/qc_ret_out.rds")
 
 
 
+#............................................................
+# BATCH EFFECT
+#...........................................................
+batch <- readr::read_csv("data/raw/sample_runs.csv")
+# fix sample names
+batch <- batch %>%
+  dplyr::mutate(S_No = purrr::map_chr(sample_name, function(x){
+    stringr::str_extract(x, "(?<=BS-|4988-).*?(?=_R[12]|_L007)")
+  })) %>%
+  dplyr::select(c("S_No", "instrument", "flowcell")) %>%
+  dplyr::filter(!duplicated(.))
+saveRDS(batch, "data/derived/batch_sample_identifiers.RDS")

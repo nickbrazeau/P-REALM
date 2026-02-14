@@ -1,0 +1,46 @@
+---
+title: "P-REALM: Persistent vs REsolving Allele Landscape in MRSA bacteremia"
+author: "Nicholas F. Brazeau"
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+output: 
+  html_document:
+    highlight: textmate
+    theme: lumen
+    toc: yes
+    toc_float: yes
+    toc_depth: 3
+    code_folding: hide
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(echo = T, warning = F, message = F, eval = T, results = 'hide',
+                      fig.align = 'center', fig.width = 8, fig.height = 8)
+knitr::opts_knit$set(root.dir = paste0(here::here(""), "/reports/"))
+
+```
+
+```{r, child = '00-introduction.Rmd'}
+```
+
+```{r, child = '01-qc.Rmd'}
+```
+
+```{r, child = '02-descriptive.Rmd'}
+```
+
+```{r, child = '03-linearassoc.Rmd'}
+```
+
+```{r, child = '04-nonlinearassoc.Rmd'}
+```
+
+```{r, child = '05-gwas.Rmd'}
+```
+
+
+
+
+
+
