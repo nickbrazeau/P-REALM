@@ -13,6 +13,7 @@
 library(tidyverse)
 library(spaMM)
 library(pheatmap)
+library(brms)
 
 #++++++++++++++++++++++++++++++++++++++++++
 ### Section 0: Setup      ####
@@ -126,18 +127,67 @@ for (i in 4:ncol(panPAmatshelldf_net)) {
 
 
 #++++++++++++++++++++++++++++++++++++++++++
-### Section 4: Investigate     ####
+### Section 4: Investigate further     ####
 #++++++++++++++++++++++++++++++++++++++++++
-FDR
-heatmap
-bayes dig one
+rosetta <- readr::read_csv("~/Documents/Github/P-REALM/data/derived/prealm_ret/bactopia-runs/pangenome-20251118-225922/panaroo/gene_presence_absence.csv")
+rosetta <- rosetta[,1:3] %>%
+  magrittr::set_colnames(c("loci", "Non-unique Gene name", "Annotation"))
+modelret_pca_rosetta <- dplyr::left_join(modelret_pca, rosetta, by = "loci")
+hist(modelret_pca$pvalue)
+filtmodelret_pca_rosetta <- modelret_pca_rosetta %>%
+  dplyr::filter(pvalue < 0.05)
+# filt
+keeploci <- colnames(panPAmatshelldf) %in% filtmodelret_pca_rosetta$loci
+keeploci[1:2] <- T
+filtpanPAmatshelldf <- panPAmatshelldf[, keeploci]
+pheatmap(filtpanPAmatshelldf[3:ncol(filtpanPAmatshelldf)])
+
+
+#............................................................
+# Bayesian Dig into those Loci
+#...........................................................
+bayesmodelret_pca <- tibble::tibble(loci = colnames(filtpanPAmatshelldf[,3:ncol(filtpanPAmatshelldf)]),
+                               model = NA,
+                               LCI = NA,
+                               UCI = NA)
+
+for (i in 1:(ncol(filtpanPAmatshelldf) - 2)) {
+  dat <- filtpanPAmatshelldf[,c(1,2,(i+2))]
+  colnames(dat) <- c("S_No", "Phenotype", "gene_i")
+
+  fit_pca_bgwas <- brms::brm(
+    Phenotype ~ gene_i + (1 | gr(S_No, cov = K_scaled_nearPD)),
+    data   = dat,
+    data2  = list(K_scaled_nearPD = K_scaled_nearPD),
+    family = bernoulli(link = "logit"),
+    prior  = c(
+      prior(normal(0, 2.5), class = "b"),
+      prior(normal(0, 5), class = "Intercept"),
+      prior(cauchy(0, 5), class = "sd")
+    ),
+    chains = 3,
+    iter   = 1e3,
+    cores  = 2
+  )
+  # extract out infro
+  bayesmodelret_pca$model[i] <- fit_pca_bgwas
+  bayesmodelret_pca$LCI[i] <- summary(fit_pca_bgwas)$fixed$`l-95% CI`[2]
+  bayesmodelret_pca$UCI[i] <- summary(fit_pca_bgwas)$fixed$`u-95% CI`[2]
+
+
+}
+
+
+
+
 
 #............................................................
 # out
 #...........................................................
 out <- list(
   gwas_modelret_pca = modelret_pca,
-  gwas_modelret_net = modelret_net
+  gwas_modelret_net = modelret_net,
+  bayesmodelret_pca = bayesmodelret_pca
 )
 
 saveRDS(out, file = "results/mod_gwas.RDS")

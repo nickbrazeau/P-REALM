@@ -15,6 +15,7 @@ library(cowplot)
 library(DT)
 library(knitr)
 library(kableExtra)
+library(pheatmap)
 set.seed(48)
 ```
 
@@ -75,6 +76,7 @@ pca$gncl %>%
                   buttons = c('csv')))
 ```
 
+**Here is a word cloud showing those annotations**. 
 ```{r,  results = 'show'}
 pca$wordcloud
 ```

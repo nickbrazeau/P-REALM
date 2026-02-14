@@ -52,6 +52,46 @@ gwas$gwas_modelret_pca %>%
 
 ```
 
+#### Table Overview for Potentially Significant Loci 
+```{r,  results = 'show'}
+rosetta <- readr::read_csv("~/Documents/Github/P-REALM/data/derived/prealm_ret/bactopia-runs/pangenome-20251118-225922/panaroo/gene_presence_absence.csv")
+rosetta <- rosetta[,1:3] %>% 
+  magrittr::set_colnames(c("loci", "Non-unique Gene name", "Annotation"))
+modelret_pca_rosetta <- dplyr::left_join(gwas$gwas_modelret_pca, rosetta, by = "loci")
+modelret_pca_rosetta %>% 
+  dplyr::select(c("loci", "Annotation", "pvalue")) %>% 
+  DT::datatable(.,
+                rownames = F,
+                extensions='Buttons',
+                options = list(
+                  searching = T,
+                  pageLength = 10,
+                  dom = 'Bfrtip',
+                  autoWidth = TRUE,
+                  buttons = c('csv')))
+```
+
+
+#### Bayesian Approach for better Structure Control Looking at the Significant Loci 
+Remember, confidence intervals should not cross zero (at bare minimum).
+```{r,  results = 'show'}
+bayes_rosetta <- dplyr::left_join(gwas$bayesmodelret_pca, rosetta, by = "loci")
+bayes_rosetta %>% 
+  dplyr::select(c("loci", "Annotation", "LCI", "UCI")) %>% 
+  DT::datatable(.,
+                rownames = F,
+                extensions='Buttons',
+                options = list(
+                  searching = T,
+                  pageLength = 10,
+                  dom = 'Bfrtip',
+                  autoWidth = TRUE,
+                  buttons = c('csv')))
+
+```
+
+
+
 ### Network GWAS 
 ```{r}
 
