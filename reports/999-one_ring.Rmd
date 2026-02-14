@@ -36,6 +36,9 @@ knitr::opts_knit$set(root.dir = paste0(here::here(""), "/reports/"))
 ```{r, child = '04-nonlinearassoc.Rmd'}
 ```
 
+```{r, child = '05-gwas.Rmd'}
+```
+
 
 
 

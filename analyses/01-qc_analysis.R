@@ -141,3 +141,15 @@ saveRDS(out, file = "results/qc_ret_out.rds")
 
 
 
+#............................................................
+# BATCH EFFECT
+#...........................................................
+batch <- readr::read_csv("data/raw/sample_runs.csv")
+# fix sample names
+batch <- batch %>%
+  dplyr::mutate(S_No = purrr::map_chr(sample_name, function(x){
+    stringr::str_extract(x, "(?<=BS-|4988-).*?(?=_R[12]|_L007)")
+  })) %>%
+  dplyr::select(c("S_No", "instrument", "flowcell")) %>%
+  dplyr::filter(!duplicated(.))
+saveRDS(batch, "data/derived/batch_sample_identifiers.RDS")

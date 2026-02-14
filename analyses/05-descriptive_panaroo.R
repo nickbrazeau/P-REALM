@@ -65,9 +65,9 @@ paFig <- panaroo_pa_data %>%
 #++++++++++++++++++++++++++++++++++++++++++
 ### Section 2: Pangenome Statistics        ####
 #++++++++++++++++++++++++++++++++++++++++++
-# core genome: >=95%; cloud genome <1%; shell genome everything else
+# core genome: >=95%; cloud genome <15%; shell genome everything else
 coregenome <- colnames(panaroo_pa_mat)[colSums(panaroo_pa_mat)/nrow(panaroo_pa_data) >= 0.95]
-cloudgenome <- colnames(panaroo_pa_mat)[colSums(panaroo_pa_mat)/nrow(panaroo_pa_data) < 0.01]
+cloudgenome <- colnames(panaroo_pa_mat)[colSums(panaroo_pa_mat)/nrow(panaroo_pa_data) < 0.15]
 shellgenome <- colnames(panaroo_pa_mat)[!(colnames(panaroo_pa_mat) %in% c(coregenome, cloudgenome))]
 
 #......................
@@ -147,8 +147,30 @@ paFigShellpersist <- panaroo_pa_data %>%
     legend.position = "none"
   )
 
+
+#......................
+# hierarchical cluster
+#......................
+panselldf <- panaroo_pa_data %>%
+  tidyr::pivot_longer(., cols = -c("S_No"),
+                      names_to = "Gene", values_to = "pa") %>%
+  dplyr::filter(Gene %in% shellgenome) %>%
+  tidyr::pivot_wider(., names_from = "Gene", values_from = "pa")
+pansellmat <- as.matrix( panselldf[,2:ncol(panselldf)] )
+rownames(pansellmat) <- panselldf$S_No
+
+hclustfig <- pheatmap(mat = t(pansellmat),
+                      fontsize = 6,
+                      legend_breaks = c(0,1),
+                      legend_labels = c("Absent", "Present"))
+
+
+
+
 # combine
 paFigShell_facet <- cowplot::plot_grid(paFigShellresolve, paFigShellpersist)
+
+
 
 #......................
 # Invert-Diff Plot
@@ -224,7 +246,8 @@ out <-list(
                  coregenomelowent = coregenome_clean),
   paFigShell = paFigShell,
   paFigShell_facet = paFigShell_facet,
-  GeneCountPlot_bypheno = GeneCountPlot_bypheno
+  GeneCountPlot_bypheno = GeneCountPlot_bypheno,
+  hclustfig = hclustfig
 )
 saveRDS(out, file = "results/panaroo_out.rds")
 

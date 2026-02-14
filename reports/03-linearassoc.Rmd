@@ -26,23 +26,86 @@ pca <- readRDS("results/linear_assoc.RDS")
 ```
 ### Panaroo
 #### PanGenome
-Structure apparent but not specific to phenotype of interest. No "smoking gun" loci loadings. More polygenic?  
-```{r}
+Structure is too apparent. This is a a presumed strain difference. 
+
+```{r, results='show'}
+pca$panPA_pca$outvarplot
+```
+
+```{r, results='show'}
 pca$panPA_pcaPlotObj
+```
+
+```{r}
 pca$panlocicont
 ```
 
 #### Shell Genome
 Recapitulated pattern 
 
-```{r}
+```{r, results='show'}
+pca$panPAshell_pca$outvarplot
+```
+
+```{r, results='show'}
 pca$panPAshell_pcaPlotObj
+```
+
+```{r}
 pca$shelllocicont
 ```
 
+#### Presumed Strain Difference 
+Multiple loci PCA contributions with perfect collinearity. This is a strain or some kind of mobile element that is being inherited consistently (eg bacterial equivalent of LD).
+```{r,  results = 'show'}
+pca$hclustfig2
+```
+
+_If we take these collinear PCI loadings and look at what it contains (all phages):_
+```{r,  results = 'show'}
+pca$gncl %>% 
+  DT::datatable(.,
+                rownames = F,
+                extensions='Buttons',
+                options = list(
+                  searching = T,
+                  pageLength = 10,
+                  dom = 'Bfrtip',
+                  autoWidth = TRUE,
+                  buttons = c('csv')))
+```
+
+```{r,  results = 'show'}
+pca$wordcloud
+```
+
+#### Masked Shell Genome
+With this is mind that we have lineage effects. Within persistent phenotype and within resolving phenotype, we will mask genes that are in what looks to be balancing selection in by pAF. 
+```{r, results='show'}
+pca$masked_panPAshell_pca$outvarplot
+```
+
+```{r, results='show'}
+pca$masked_panPAshell_pcaPlotObj
+```
+
+```{r}
+pca$masked_shellPA_pca_loci_cont_PlotObj
+```
+
+
+
 ### Snippy
 Some very tight clustering. Wonder if this is MLST. Need to explore SNPs more pending loci of interest (less likely this is a SNP driving these changes that missed at the gene level by Panaroo - but maybe)
-```{r}
+
+```{r, results='show'}
+pca$vcf_pca$outvarplot
+```
+
+```{r, results='show'}
 pca$vcf_pcaPlotObj
+```
+
+```{r}
 pca$vcflocicont
 ```

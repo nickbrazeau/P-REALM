@@ -32,7 +32,7 @@ qc$qctbl
 ```
 
 Plan to exclude samples with >200 contigs, indicating poor assembly and quality. Those samples are: 
-```{r}
+```{r,  results = 'show'}
 qc$excludedsmpl %>% 
   knitr::kable(.)
 ```
@@ -45,4 +45,18 @@ qc$qcplots
 ### Visualizing GC Content for Sequence Consistency
 ```{r}
 qc$gccont_plot
+```
+
+### Batch Effects
+Samples were run over two different instruments. Thus, possibility for batch effects. Can use PCA to visualize. 
+
+```{r}
+btch <- readRDS("results/bacth_qc.RDS")
+```
+
+```{r, results="show"}
+btch$panPA_pcaPlotObj_batch
+```
+```{r, results="show"}
+btch$vcf_pcaPlotObj_batch
 ```

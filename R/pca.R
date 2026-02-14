@@ -103,10 +103,12 @@ plot_loci_contributions <- function(pca_run, num_components = 3, contmin = 0.01)
   # plot
   dat %>%
     ggplot() +
-    geom_bar(aes(x = locus, y = contribution),
+    geom_point(aes(x = locus, y = contribution),
              stat = "identity", position = position_dodge(),
              color = "#9ecae1") +
     theme_minimal() +
     theme(axis.text.y = element_text(family = "Helvetica", hjust = 0.5, size = 10),
           axis.text.x = element_text(family = "Helvetica", angle = 90, hjust = 0.5, size = 8))
 }
+
+

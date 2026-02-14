@@ -32,7 +32,7 @@ mslt <- readRDS("results/typing_out.rds")
 ```
 
 #### MSLT Table Overview (Wide)
-```{r}
+```{r,  results = 'show'}
 mslt$typing_summ %>% 
   DT::datatable(.,
                 rownames = F,
@@ -73,7 +73,7 @@ AMR <- readRDS("results/AMR_out.rds")
 ```
 
 #### Combined Table Overview (Long)
-```{r}
+```{r,  results = 'show'}
 AMR$AMRRGIcombtidy %>% 
   DT::datatable(.,
                 rownames = F,
@@ -88,12 +88,12 @@ AMR$AMRRGIcombtidy %>%
 
 #### Confusion Matrices
 ##### Sample-Level
-```{r}
+```{r,  results = 'show'}
 AMR$smplconfusionmatrix %>% 
   knitr::kable(.)
 ```
 ##### Gene-Level
-```{r}
+```{r,  results = 'show'}
 AMR$geneconfusionmatrix %>% 
   knitr::kable(.)
 ```
@@ -111,7 +111,6 @@ amrdr %>%
                       names_to = "gene", values_to = "pa") %>%
   ggplot() +
   geom_tile(aes(x = gene, y = S_No, fill = pa)) +
-  map_theme +
   labs(
     title = "Presence-Absence AMRGene-Sample Matrix",
     x = "Genes",
@@ -188,7 +187,7 @@ amrdr[,c(T, T, keepcols)] %>%
 MOB <- readRDS("results/MOB_out.rds")
 ```
 #### Combined Table Overview (Wide/Long)
-```{r}
+```{r,  results = 'show'}
 MOB$pfmobcomb %>% 
   DT::datatable(.,
                 rownames = F,
@@ -203,7 +202,7 @@ MOB$pfmobcomb %>%
 
 #### Confusion Matrices
 ##### Gene-Level
-```{r}
+```{r,  results = 'show'}
 MOB$mobconfusionmatrix %>% 
   knitr::kable(.)
 ```
@@ -222,7 +221,6 @@ mobdf %>%
   dplyr::mutate(pa = purrr::map_dbl(pa, function(x) ifelse(is.null(x), 0, 1))) %>% 
   ggplot() +
   geom_tile(aes(x = gene, y = S_No, fill = pa)) +
-  map_theme +
   labs(
     title = "Presence-Absence MOB-Sample Matrix",
     x = "Genes",
@@ -304,7 +302,7 @@ panaroo <- readRDS("results/panaroo_out.rds")
 
 #### Core (Clean) Genome
 Defined as loci that are conserved/identical amongst >=95% of samples and have a low Shannon Entropy and the cloud genome (seen in <1% of samples).
-```{r}
+```{r,  results = 'show'}
 tibble::tibble(Gene = panaroo$genomes$coregenomelowent ) %>% 
   dplyr::left_join(., panaroo$panaroo_gen_annot) %>% 
   DT::datatable(.,
@@ -320,7 +318,7 @@ tibble::tibble(Gene = panaroo$genomes$coregenomelowent ) %>%
 
 #### Shell Genome
 Defined as loci not within the core genome (conserved/identical amongst >=95% of samples) and the cloud genome (seen in <1% of samples). 
-```{r}
+```{r,  results = 'show'}
 tibble::tibble(Gene = panaroo$genomes$shellgenome ) %>% 
   dplyr::left_join(., panaroo$panaroo_gen_annot) %>% 
   DT::datatable(.,
@@ -338,6 +336,12 @@ tibble::tibble(Gene = panaroo$genomes$shellgenome ) %>%
 ```{r}
 panaroo$paFigShell_facet
 ```
+
+#### Shell Genome Hierarchical Clustering
+```{r}
+panaroo$hclustfig
+```
+
 
 #### Whole Genome Gene/Loci Count by Phenotype 
 Pretty minute differences.... 

@@ -15,7 +15,21 @@ library(cowplot)
 library(DT)
 library(knitr)
 library(kableExtra)
-library(igraph)
-library(tidygraph)
-set.seed(48)
+```
+
+## Nonlinear Associations
+Using Networks to analyze sample clines and gene contributions from the Panaroo output: Shell Genome and Masked Shell Genomes 
+```{r}
+net <- readRDS("results/network_out.RDS")
+
+```
+### Panaroo
+#### Shell Genome
+```{r, results="show"}
+net$shell_net_plot
+```
+
+#### Masked-Shell Genome
+```{r, results="show"}
+net$shell_masked_net_plot
 ```
